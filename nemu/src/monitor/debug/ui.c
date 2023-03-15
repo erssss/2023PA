@@ -23,6 +23,14 @@ void cpu_exec(uint64_t);
 | 删除监视点   | d N         | 删除序号为N的监视点                                                           | d 2                   |
 */
 
+/**
+ * d，lx，ld，，lu，这几个都是输出32位的
+ * hd，hx，hu，这几个都是输出16位数据的，
+ * hhd，hhx，hhu，这几个都是输出8位的，
+ * lld，ll，llu，llx，这几个都是输出64位的，
+ * 
+ */
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -55,16 +63,14 @@ static int cmd_q(char *args) {
 
 /* si */
 static int cmd_si(char *args){
-  uint64_t N=0;
-  if(args==NULL)
-  {
+  int N=0;
+  if(args==NULL){
 	  N=1;
   }
-  else
-	{
-	  int input=sscanf(args,"%llu",&N);
-	  if(input<=0){
-		  printf("cmd_si error! input = %d\n",input);
+  else{
+	  N = atoi(strtok(NULL, " "));
+	  if(N <= 0){
+		  printf("cmd_si error! input = %d\n",N);
 		  return 0;
 		}
 	}
@@ -74,22 +80,16 @@ static int cmd_si(char *args){
 
 /* info */
 static int cmd_info(char* args) {
-	char s;
 	if (args == NULL) {
-		printf("args error in cmd_info\n");
+		printf("args NULL in cmd_info\n");
 		return 0;
 	};
 
-	int input = sscanf(args, "%c", &s);
-	if (input <= 0) {
-		printf("cmd_info error! input = %d \n",input);
-		return 0;
-	}
-  if (s == 'w') {
+  if (strcmp(args,"w") == 0) {
 		print_wp();
 		return 0;
 	}
-	else if (s == 'r') {
+	else if (strcmp(args,"r") == 0) {
 		for (int i = 0; i < 8; i++)
 			printf("%s  0x%x\n", regsl[i], reg_l(i));
 
@@ -105,16 +105,70 @@ static int cmd_info(char* args) {
 }
 
 /* x */
-static int cmd_x(char *args){ return 0;}
+static int cmd_x(char *args){
+
+  if (args == NULL)
+    printf("cmd_x args is NULL!\n");
+
+  int len = atoi(strtok(NULL, " "));;
+  char *exp = strtok(NULL, " ");
+
+	uint32_t res;
+  bool success;
+  res = expr(exp,&success);
+  if(!success)
+	  printf("Expr calculation error!\n");
+
+  for (int i = 0; i < len; i++) {
+    printf("0x%08x\n", vaddr_read(res, 4));
+    res += 4;
+  }
+
+  return 0;
+
+}
 
 /* p */
-static int cmd_p(char *args){ return 0;}
+static int cmd_p(char *args){
+	bool success=true;
+	uint32_t res=expr(args,&success);
+
+	if(success == false)
+	  printf("Expr calculation error!\n");
+	else
+	  printf("Expr value = %u\n",res);
+
+	return 0;
+}
 
 /* w */
-static int cmd_w(char *args){ return 0;}
+static int cmd_w(char* args) {
+  bool success=true;
+	uint32_t res=expr(args,&success);
+
+	if(success == false)
+	  printf("Expr calculation error!\n");
+
+	new_wp(res);
+  printf("Start watch: %u \n",res);
+	return 0;
+}
 
 /* d */
-static int cmd_d(char *args){ return 0;}
+static int cmd_d(char* args) {
+	int num = 0;
+	int input = sscanf(args, "%d", &num);
+	if (input <= 0) {
+		printf("args error in cmd_si\n");
+		return 0;
+	}
+	int r = free_wp(num);
+	if (r == false)
+		printf("error: no watchpoint %d\n", num);
+	else
+		printf("Success delete watchpoint %d\n", num);
+	return 0;
+}
 
 
 /* h */
@@ -134,8 +188,8 @@ static struct {
   { "info", "Print reg info", cmd_info },
   { "x", "Scan memory", cmd_x },
   { "p", "Expr evaluation", cmd_p },
-  { "w", "New watchpoints", cmd_w },
-  { "d", "Delete watchpoints", cmd_d },
+  { "w", "New a watchpoints", cmd_w },
+  { "d", "Delete a watchpoints", cmd_d },
 };
 
 

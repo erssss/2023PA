@@ -37,10 +37,25 @@ WP *new_wp()
   return new_wp;
 }
 
-void free_wp(WP *wp)
+// void free_wp(WP *wp)
+// {
+//   wp->next = free;
+//   free = wp;
+// }
+
+int free_wp(int no)
 {
-  wp->next = free;
-  free = wp;
+  WP *tmp = head;
+  for(int i=0;i<no-1;i++){
+    if(tmp == NULL){
+      printf("free_wp no out of list!\n");
+      return -1;
+    }
+    tmp = tmp->next;
+  }
+  tmp->next = free;
+  free = tmp;
+  return 0;
 }
 
 void print_wp(){
