@@ -112,7 +112,6 @@ static bool make_token(char *e) {
           default: 
             nr_token++;
             break;
-
         }
 
         break;
@@ -135,7 +134,8 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  // TODO();
+
 
   return 0;
 }
