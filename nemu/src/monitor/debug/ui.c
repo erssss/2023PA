@@ -10,21 +10,19 @@
 void cpu_exec(uint64_t);
 
 /**
- * @brief 
- * help Display informations about all supported commands
- * h:      Display informations about all supported commands
- * c:      Continue the execution of the program
- * q:      Exit NEMU
- * si:     单步执行N 条指令后暂停, N 缺省为1: si 3
- * s:      单步执行N 条指令后暂停, N 缺省为1: s 3
- * info:   打印寄存器状态和监视点信息: info r , info w
- * i:      打印寄存器状态和监视点信息: i r, i w
- * p:      求表达式EXPR 的值: p $eax+1, p 0x 12+3 * 4
- * x:      查看内存(显示N 个4 字节): x 50 x 100000
- * w:      设置监视点: 当EXPR 值变化时暂停程序: w * 0 x 2000, w $eax+1
- * d:      删除序号为N 的监视点: d 2
- * 
- */
+| 命令         | 格式        | 说明                                                                          | 使用举例              |
+| ------------ | ----------- | ---------------------------------------------------------------------------- | --------------------- |
+| 帮助(1)      | help        | 打印命令的帮助信息                                                            | help                  |
+| 继续运行(1)  | c           | 继续运行被暂停的程序                                                          | c                     |
+| 退出(1)      | q           | 退出NEMU                                                                     | q                     |
+| 单步执行     | si [N]     | 让程序单步执行N条指令后暂停执行，当N没有给出时，缺省为1                           | si 10                 |
+| 打印程序状态 | info SUBCMD | 打印寄存器状态，打印监视点信息                                                 | info r info w         |
+| 表达式求值   | p EXPR      | 求出表达式EXPR的值，EXPR支持的运算请见调试中的表达式求值小节                    | p $eax + 1            |
+| 扫描内存(2)  | x N EXPR    | 求出表达式EXPR的值，将结果作为起始内存地址，以十六进制形式输出连续的N个4字节     | x 10 $esp             |
+| 设置监视点   | w EXPR      | 当表达式EXPR的值发生变化时，暂停程序执行                                       | w\*0x2000             |
+| 删除监视点   | d N         | 删除序号为N的监视点                                                           | d 2                   |
+*/
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -54,6 +52,71 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+
+/* si */
+static int cmd_si(char *args){
+  uint64_t N=0;
+  if(args==NULL)
+  {
+	  N=1;
+  }
+  else
+	{
+	  int input=sscanf(args,"%llu",&N);
+	  if(input<=0){
+		  printf("cmd_si error! input = %d\n",input);
+		  return 0;
+		}
+	}
+	cpu_exec(N);
+	return 0;
+}
+
+/* info */
+static int cmd_info(char* args) {
+	char s;
+	if (args == NULL) {
+		printf("args error in cmd_info\n");
+		return 0;
+	};
+
+	int input = sscanf(args, "%c", &s);
+	if (input <= 0) {
+		printf("cmd_info error! input = %d \n",input);
+		return 0;
+	}
+  if (s == 'w') {
+		print_wp();
+		return 0;
+	}
+	else if (s == 'r') {
+		for (int i = 0; i < 8; i++)
+			printf("%s  0x%x\n", regsl[i], reg_l(i));
+
+		for (int i = 0; i < 8; i++)
+			printf("%s  0x%x\n", regsw[i], reg_w(i));
+
+		for (int i = 0; i < 8; i++)
+			printf("%s  0x%x\n", regsb[i], reg_b(i));
+      
+		return 0;
+	}
+	return 0;
+}
+
+/* x */
+static int cmd_x(char *args){ return 0;}
+
+/* p */
+static int cmd_p(char *args){ return 0;}
+
+/* w */
+static int cmd_w(char *args){ return 0;}
+
+/* d */
+static int cmd_d(char *args){ return 0;}
+
+
 /* h */
 static int cmd_help(char *args);
 
@@ -67,14 +130,15 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
 
   /* TODO: Add more commands */
-  { "si","exec gradully",cmd_si},
-  { "info","print reg",cmd_info},
-  { "x","scan memory",cmd_x},
-  { "p","expr calculate",cmd_p},
-  { "w","new a watchpoint",cmd_w},
-  { "d","delete watchpoint",cmd_d},
-
+  { "si", "Execute single-step", cmd_si },
+  { "info", "Print reg info", cmd_info },
+  { "x", "Scan memory", cmd_x },
+  { "p", "Expr evaluation", cmd_p },
+  { "w", "New watchpoints", cmd_w },
+  { "d", "Delete watchpoints", cmd_d },
 };
+
+
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
 
@@ -138,55 +202,4 @@ void ui_mainloop(int is_batch_mode) {
 
     if (i == NR_CMD) { printf("Unknown command '%s'\n", cmd); }
   }
-}
-
-/* si */
-static int cmd_si(char *args){
-  uint64_t N=0;
-  if(args==NULL)
-  {
-	  N=1;
-  }
-  else
-	{
-	  int input=sscanf(args,"%llu",&N);
-	  if(input<=0){
-		  printf("cmd_si error! input = %llu\n",input);
-		  return 0;
-		}
-	}
-	cpu_exec(N);
-	return 0;
-}
-
-/* info */
-static int cmd_info(char* args) {
-	char s;
-	if (args == NULL) {
-		printf("args error in cmd_info\n");
-		return 0;
-	};
-
-	int input = sscanf(args, "%c", &s);
-	if (input <= 0) {
-		printf("cmd_info error! input = %llu \n",input);
-		return 0;
-	}
-  if (s == 'w') {
-		print_wp();
-		return 0;
-	}
-	else if (s == 'r') {
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsl[i], reg_l(i));
-
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsw[i], reg_w(i));
-
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsb[i], reg_b(i));
-      
-		return 0;
-	}
-	return 0;
 }
