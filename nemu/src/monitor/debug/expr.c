@@ -6,11 +6,9 @@
 #include <sys/types.h>
 #include <regex.h>
 
-enum {
-  TK_NOTYPE = 256, TK_EQ
-
   /* TODO: Add more token types */
-
+enum {
+  TK_NOTYPE = 256, TK_EQ , HEX , NUM , REG , TK_AND , TK_OR , TK_NEQ , TK_MINUS , TK_DER
 };
 
 static struct rule {
@@ -23,8 +21,23 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"==", TK_EQ}         // equal
+  {"\\+", '+'},
+  {"\\-",'-'},
+  {"\\*",'*'},
+  {"\\/",'/'},
+  {"\\(",'('},
+  {"\\)",')'},
+
+  {"!=",TK_NEQ},
+  {"==", TK_EQ},
+
+  {"&&",TK_AND},
+  {"\\|\\|",TK_OR},
+
+  {"0[xX][0-9a-fA-F]+",HEX},
+  {"0|[1-9][0-9]*",NUM},
+
+  {"\\$[a-z]+",REG},
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -47,6 +60,8 @@ void init_regex() {
     }
   }
 }
+
+const int max_len = 32;
 
 typedef struct token {
   int type;
@@ -80,7 +95,24 @@ static bool make_token(char *e) {
          */
 
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NOTYPE:
+            break;
+          case NUM:
+          case REG:
+          case HEX:
+            if(substr_len >= max_len) {
+              printf("str: %s 's len %d out of the max size of char array len %d!\n",substr_start,substr_len,max_len);
+              assert(0);
+            }
+            else {
+              strcpy(tokens[nr_token++].str,substr_start);
+            }
+            break;
+
+          default: 
+            nr_token++;
+            break;
+
         }
 
         break;
