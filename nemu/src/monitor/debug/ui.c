@@ -31,6 +31,8 @@ void cpu_exec(uint64_t);
  * 
  */
 
+static int wp_count = 0;
+
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 char* rl_gets() {
   static char *line_read = NULL;
@@ -92,19 +94,19 @@ static int cmd_info(char* args) {
 	else if (strcmp(args,"r") == 0) {
 		for (int i = 0; i < 8; i++){
 			printf("%s  0x%x\t", regsl[i], reg_l(i));
-      if(i!=0&&i%2==0)
+      if(i%2==1)
           printf("\n");
     }
 
 		for (int i = 0; i < 8; i++){
 			printf("%s  0x%x\t", regsw[i], reg_w(i));
-      if(i!=0&&i%2==0)
+      if(i%2==1)
           printf("\n");
 
     }
 		for (int i = 0; i < 8; i++){
 			printf("%s  0x%x\t", regsb[i], reg_b(i));
-      if(i!=0&&i%4==0)
+      if(i%4==3)
           printf("\n");
     }
 		return 0;
@@ -157,7 +159,12 @@ static int cmd_w(char* args) {
 	if(success == false)
 	  printf("Expr calculation error!\n");
 
-	new_wp(res);
+	WP* wp = new_wp(res);
+  strcpy(wp->expr, args);
+  wp->result=res;
+
+  wp->NO = ++wp_count;
+
   printf("Start watch: %u \n",res);
 	return 0;
 }
