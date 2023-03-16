@@ -282,7 +282,7 @@ int dominant_op(int p, int q) {
         }
         prt = get_priority(tokens[i].type, layer);
 # ifdef DEBUG_CHECK
-        printf("i = %d ; prt = %d ; \n",i,prt);
+        printf("i = %d ; prt = %d ; %s\n",i,prt,tokens[i].str);
 # endif
         if (prt < minPrt) {
             minPrt = prt;
