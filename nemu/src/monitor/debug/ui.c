@@ -106,7 +106,7 @@ static int cmd_info(char* args) {
     }
 		for (int i = 0; i < 8; i++){
 			printf("%s  0x%x\t", regsb[i], reg_b(i));
-      if(i%4==3)
+      if(i%2==1)
           printf("\n");
     }
 		return 0;
