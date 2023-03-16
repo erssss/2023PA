@@ -133,7 +133,7 @@ static bool make_token(char *q) {
                                substr_start, substr_len, max_len);
                         break;
                     } else {
-                        strncpy(tokens[nr_token++].str, substr_start, substr_len-1);
+                        strncpy(tokens[nr_token++].str, substr_start, substr_len);
                     }
                     break;
 
@@ -153,6 +153,20 @@ static bool make_token(char *q) {
         }
     }
 
+  if(tokens[0].type == '-') {
+    tokens[0].type = TK_MINUS;
+  } 
+  else if(tokens[0].type == '*') {
+    tokens[0].type = TK_DER;
+  }
+
+  for(int j=1;j<nr_token;++j) {
+    if(tokens[j].type == '-' && tokens[j-1].type != ')' && ( tokens[j-1].type > REG || tokens[j-1].type < HEX)) 
+      tokens[j].type = TK_MINUS;
+    else if(tokens[j].type == '*' && tokens[j-1].type != ')' && ( tokens[j-1].type > REG || tokens[j-1].type < HEX))
+      tokens[j].type = TK_DER;
+  }
+  
     return true;
 }
 
