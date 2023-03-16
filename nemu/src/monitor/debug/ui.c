@@ -162,9 +162,10 @@ static int cmd_d(char* args) {
 		printf("args error in cmd_si\n");
 		return 0;
 	}
-	int r = free_wp(num);
-	if (r == false)
-		printf("error: no watchpoint %d\n", num);
+	bool res = delete_wp(num);
+	if (res == true)
+    return 1;
+		// printf("error: no watchpoint %d\n", num);
 	else
 		printf("Success delete watchpoint %d\n", num);
 	return 0;

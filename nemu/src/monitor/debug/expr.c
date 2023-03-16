@@ -202,11 +202,13 @@ uint32_t hex_to_dec(char str[32]) {
           break;
         result = 16 * result + tmp;
     }
+
 #ifdef DEBUG_CHECK
     printf("hex_to_dec: %s to %d \n",str,result);
 #endif
     return result;
 }
+
 uint32_t eval(int p, int q) {
 #ifdef DEBUG_CHECK
     printf("p = %d str[p] = %d, q = %d str[q] = %d\n", p, tokens[p].type, q,
@@ -327,9 +329,9 @@ bool check_parentheses(int left, int right) {
 int get_priority(int type, int layer) {
     if (layer == 0) { // 括弧优先
         switch (type) {
-        case NUM:
         case REG:
         case HEX:
+        case NUM:
         case TK_MINUS:
         case TK_DER:
             return 0;
