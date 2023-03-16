@@ -188,7 +188,7 @@ uint32_t hex_to_dec(char str[32]) {
 }
 
 uint32_t eval(int p, int q) {
-  printf("p = %d , q = %d",p,q);
+  printf("p = %d , q = %d \n",p,q);
     if (p > q) {
         /*Bad expression */
         printf("p > q\n");
@@ -256,10 +256,11 @@ uint32_t eval(int p, int q) {
     return 0;
 }
 
+
 int dominant_op(int p, int q) {
     int op = 0;
     int minPrt = 6;
-    int prt = 0;
+    int prt = -1;
     int layer = 0;
     for (int i = p; i <= q; ++i) {
         if (tokens[i].type == '(') {
@@ -272,7 +273,7 @@ int dominant_op(int p, int q) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
-        if (prt < minPrt) {
+        if (prt <= minPrt) {
             minPrt = prt;
             op = i;
         }
