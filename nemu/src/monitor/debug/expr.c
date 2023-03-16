@@ -219,8 +219,8 @@ uint32_t hex_to_dec(char str[32]) {
 }
 uint32_t eval(int p, int q) {
 #ifdef DEBUG_CHECK
-    printf("p = %d str[p] = %s, q = %d str[q] = %s\n", p, print_ch[tokens[p].type], q,
-           print_ch[tokens[q].type]);
+    printf("p = %d str[p] = %d, q = %d str[q] = %d\n", p, tokens[p].type, q,
+           tokens[q].type);
 #endif
     if (p > q) {
         /*Bad expression */
