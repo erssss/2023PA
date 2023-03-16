@@ -120,7 +120,7 @@ static bool make_token(char *q) {
                  * to record the token in the array `tokens'. For certain types
                  * of tokens, some extra actions should be performed.
                  */
-
+                tokens[nr_token].type = rules[i].token_type;
                 switch (rules[i].token_type) {
                 case TK_NOTYPE:
                     break;
@@ -166,7 +166,7 @@ static bool make_token(char *q) {
     else if(tokens[j].type == '*' && tokens[j-1].type != ')' && ( tokens[j-1].type > REG || tokens[j-1].type < HEX))
       tokens[j].type = TK_DER;
   }
-  
+
     return true;
 }
 
