@@ -200,6 +200,9 @@ uint32_t hex_to_dec(char str[32]) {
         }
         result = 16 * result + tmp;
     }
+#ifdef DEBUG_CHECK
+    printf("hex_to_dec: %s to %d \n",str,result);
+#endif
     return result;
 }
 uint32_t eval(int p, int q) {
@@ -293,6 +296,7 @@ int dominant_op(int p, int q) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
+        
 #ifdef DEBUG_CHECK
         printf("i = %d ; prt = %d ; %d\n", i, prt, tokens[i].type);
 #endif
