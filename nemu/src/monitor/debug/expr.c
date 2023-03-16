@@ -54,26 +54,20 @@ static struct rule {
     /* TODO: Add more rules.
      * Pay attention to the precedence level of different rules.
      */
-
-    {" +", TK_NOTYPE}, // spaces
-    {"\\+", '+'},
-    {"\\-", '-'},
-    {"\\*", '*'},
-    {"\\/", '/'},
-    {"\\(", '('},
-    {"\\)", ')'},
-
-    {"!=", TK_NEQ},
-    {"==", TK_EQ},
-
-    {"&&", TK_AND},
-    {"!", TK_NOT},
-    {"[\\|]{2}", TK_OR}, // 或者：{"\\|\\|",TK_OR},
-
-    {"0[xX][0-9a-fA-F]+", HEX},
-    {"0|[1-9][0-9]*", NUM},
-
-    {"\\$[a-z]+", REG},
+    {" +", TK_NOTYPE},    // spaces
+    {"\\+", '+'},         // plus
+    {"==", TK_EQ},         // equal
+    {"0[xX][0-9a-fA-F]+",HEX},
+    {"0|[1-9][0-9]*",NUM},
+    {"\\-",'-'},
+    {"\\*",'*'},
+    {"\\/",'/'},
+    {"\\(",'('},
+    {"\\)",')'},
+    {"\\$[a-z]+",REG},
+    {"&&",TK_AND},
+    {"[\\|]{2}", TK_OR}, //{"\\|\\|",TK_OR},
+    {"!=",TK_NEQ}
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
