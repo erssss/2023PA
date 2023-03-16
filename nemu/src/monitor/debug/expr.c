@@ -189,7 +189,7 @@ uint32_t expr(char *q, bool *success) {
 
 uint32_t hex_to_dec(char str[32]) {
     uint result = 0;
-    for (int i = 2; str[i]!=' '; ++i) {
+    for (int i = 2; i<10 &&str[i]!=' '; ++i) {
         int tmp = 0;
         if (str[i] >= '0' && str[i] <= '9') {
             tmp = (int)str[i] - (int)'0';
