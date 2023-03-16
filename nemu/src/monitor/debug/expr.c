@@ -32,19 +32,9 @@ enum {
     TK_DER
 };
 
-char* print_ch[]={
-    "TK_NOTYPE",
-    "TK_EQ",
-    "HEX",
-    "NUM",
-    "REG",
-    "TK_AND",
-    "TK_NOT",
-    "TK_OR",
-    "TK_NEQ",
-    "TK_MINUS",
-    "TK_DER"
-};
+char *print_ch[] = {"TK_NOTYPE", "TK_EQ",    "HEX",    "NUM",
+                    "REG",       "TK_AND",   "TK_NOT", "TK_OR",
+                    "TK_NEQ",    "TK_MINUS", "TK_DER"};
 
 static struct rule {
     char *regex;
@@ -54,21 +44,20 @@ static struct rule {
     /* TODO: Add more rules.
      * Pay attention to the precedence level of different rules.
      */
-    {" +", TK_NOTYPE},    // spaces
-    {"\\+", '+'},         // plus
-    {"==", TK_EQ},         // equal
-    {"0[xX][0-9a-fA-F]+",HEX},
-    {"0|[1-9][0-9]*",NUM},
-    {"\\-",'-'},
-    {"\\*",'*'},
-    {"\\/",'/'},
-    {"\\(",'('},
-    {"\\)",')'},
-    {"\\$[a-z]+",REG},
-    {"&&",TK_AND},
+    {" +", TK_NOTYPE}, // spaces
+    {"\\+", '+'},      // plus
+    {"==", TK_EQ},     // equal
+    {"0[xX][0-9a-fA-F]+", HEX},
+    {"0|[1-9][0-9]*", NUM},
+    {"\\-", '-'},
+    {"\\*", '*'},
+    {"\\/", '/'},
+    {"\\(", '('},
+    {"\\)", ')'},
+    {"\\$[a-z]+", REG},
+    {"&&", TK_AND},
     {"[\\|]{2}", TK_OR}, //{"\\|\\|",TK_OR},
-    {"!=",TK_NEQ}
-};
+    {"!=", TK_NEQ}};
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]))
 
@@ -167,9 +156,11 @@ static bool make_token(char *q) {
     }
 
     for (int j = 1; j < nr_token; ++j) {
+      // 负数
         if (tokens[j].type == '-' && tokens[j - 1].type != ')' &&
             (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
             tokens[j].type = TK_MINUS;
+      // 指针
         else if (tokens[j].type == '*' && tokens[j - 1].type != ')' &&
                  (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
             tokens[j].type = TK_DER;
@@ -279,7 +270,7 @@ uint32_t eval(int p, int q) {
         case TK_OR:
             return val1 || val2;
         default:
-            printf("token computing fail!\n");
+            printf("Token computing fail!\n");
             assert(0);
         }
     }
@@ -328,7 +319,7 @@ bool check_parentheses(int left, int right) {
 }
 
 int get_priority(int type, int layer) {
-    if (layer == 0) {
+    if (layer == 0) { // 括弧优先
         switch (type) {
         case NUM:
         case REG:
