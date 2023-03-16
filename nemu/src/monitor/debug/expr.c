@@ -192,6 +192,7 @@ uint32_t hex_to_dec(char str[32]) {
     for (int i = 2; i < 10; ++i) {
         int tmp = 0;
         if (str[i] >= '0' && str[i] <= '9') {
+          printf("\t %c",str[i]);
             tmp = (int)str[i] - (int)'0';
         } else if (str[i] >= 'a' && str[i] <= 'f') {
             tmp = (int)str[i] - (int)'a' + 10;
