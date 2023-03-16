@@ -4,9 +4,9 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <regex.h>
-#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 uint32_t expr(char *q, bool *success);
 uint32_t hex_to_dec(char str[32]);
@@ -15,9 +15,7 @@ int dominant_op(int p, int q);
 bool check_parentheses(int left, int right);
 int get_priority(int type, int layer);
 
-
-# define DEBUG_CHECK 1
-
+#define DEBUG_CHECK 1
 
 /* TODO: Add more token types */
 enum {
@@ -32,6 +30,20 @@ enum {
     TK_NEQ,
     TK_MINUS,
     TK_DER
+};
+
+char* print_ch[]={
+    "TK_NOTYPE",
+    "TK_EQ",
+    "HEX",
+    "NUM",
+    "REG",
+    "TK_AND",
+    "TK_NOT",
+    "TK_OR",
+    "TK_NEQ",
+    "TK_MINUS",
+    "TK_DER"
 };
 
 static struct rule {
@@ -133,7 +145,8 @@ static bool make_token(char *q) {
                                substr_start, substr_len, max_len);
                         break;
                     } else {
-                        strncpy(tokens[nr_token++].str, substr_start, substr_len);
+                        strncpy(tokens[nr_token++].str, substr_start,
+                                substr_len);
                     }
                     break;
 
@@ -153,19 +166,20 @@ static bool make_token(char *q) {
         }
     }
 
-  if(tokens[0].type == '-') {
-    tokens[0].type = TK_MINUS;
-  } 
-  else if(tokens[0].type == '*') {
-    tokens[0].type = TK_DER;
-  }
+    if (tokens[0].type == '-') {
+        tokens[0].type = TK_MINUS;
+    } else if (tokens[0].type == '*') {
+        tokens[0].type = TK_DER;
+    }
 
-  for(int j=1;j<nr_token;++j) {
-    if(tokens[j].type == '-' && tokens[j-1].type != ')' && ( tokens[j-1].type > REG || tokens[j-1].type < HEX)) 
-      tokens[j].type = TK_MINUS;
-    else if(tokens[j].type == '*' && tokens[j-1].type != ')' && ( tokens[j-1].type > REG || tokens[j-1].type < HEX))
-      tokens[j].type = TK_DER;
-  }
+    for (int j = 1; j < nr_token; ++j) {
+        if (tokens[j].type == '-' && tokens[j - 1].type != ')' &&
+            (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
+            tokens[j].type = TK_MINUS;
+        else if (tokens[j].type == '*' && tokens[j - 1].type != ')' &&
+                 (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
+            tokens[j].type = TK_DER;
+    }
 
     return true;
 }
@@ -188,7 +202,6 @@ uint32_t expr(char *q, bool *success) {
     return 0;
 }
 
-
 uint32_t hex_to_dec(char str[32]) {
     uint result = 0;
     for (int i = 2; i < 10; ++i) {
@@ -205,9 +218,10 @@ uint32_t hex_to_dec(char str[32]) {
     return result;
 }
 uint32_t eval(int p, int q) {
-# ifdef DEBUG_CHECK
-  printf("p = %d str[p] = %s, q = %d str[q] = %s\n",p,tokens[p].str,q,tokens[q].str);
-# endif
+#ifdef DEBUG_CHECK
+    printf("p = %d str[p] = %s, q = %d str[q] = %s\n", p, print_ch[tokens[p].type], q,
+           print_ch[tokens[q].type]);
+#endif
     if (p > q) {
         /*Bad expression */
         printf("p > q\n");
@@ -247,9 +261,9 @@ uint32_t eval(int p, int q) {
     } else {
         /* we should do more things here. */
         int op = dominant_op(p, q);
-# ifdef DEBUG_CHECK
-        printf("\n=== op = %d \n",op);
-# endif
+#ifdef DEBUG_CHECK
+        printf("\n=== op = %d \n", op);
+#endif
         uint32_t val1 = eval(p, op - 1);
         uint32_t val2 = eval(op + 1, q);
 
@@ -278,7 +292,6 @@ uint32_t eval(int p, int q) {
     return 0;
 }
 
-
 int dominant_op(int p, int q) {
     int op = 0;
     int minPrt = 6;
@@ -295,9 +308,9 @@ int dominant_op(int p, int q) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
-# ifdef DEBUG_CHECK
-        printf("i = %d ; prt = %d ; %s\n",i,prt,tokens[i].str);
-# endif
+#ifdef DEBUG_CHECK
+        printf("i = %d ; prt = %d ; %s\n", i, prt, tokens[i].str);
+#endif
         if (prt < minPrt) {
             minPrt = prt;
             op = i;
@@ -319,7 +332,6 @@ bool check_parentheses(int left, int right) {
     else
         return false;
 }
-
 
 int get_priority(int type, int layer) {
     if (layer != 0) {
