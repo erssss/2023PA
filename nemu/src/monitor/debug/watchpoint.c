@@ -75,10 +75,10 @@ void print_wp() {
         return;
     }
     printf("[watchpoints]:\n");
-    printf("No.   hitTimes      expr\n");
+    printf("No.\t\thitTimes\t\texpr\n");
     WP *tmp = head;
     while (tmp != NULL) {
-        printf("%d    %d      %s\n", tmp->NO, tmp->hitTimes, tmp->expr);
+        printf("%d\t\t%d\t\t%s\n", tmp->NO, tmp->hitTimes, tmp->expr);
         tmp = tmp->next;
     }
 }
