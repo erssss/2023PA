@@ -189,8 +189,8 @@ uint32_t expr(char *q, bool *success) {
 
 uint32_t hex_to_dec(char str[32]) {
     uint result = 0;
-    for (int i = 2; i<10 &&str[i]!=' '; ++i) {
-      printf("i = %d, %c",i,str[i]);
+    for (int i = 2; i<10; ++i) {
+      // printf("i = %d, %c",i,str[i]);
         int tmp = 0;
         if (str[i] >= '0' && str[i] <= '9') {
             tmp = (int)str[i] - (int)'0';
@@ -198,7 +198,8 @@ uint32_t hex_to_dec(char str[32]) {
             tmp = (int)str[i] - (int)'a' + 10;
         } else if (str[i] >= 'A' && str[i] <= 'F') {
             tmp = (int)str[i] - (int)'A' + 10;
-        }
+        }else 
+          break;
         result = 16 * result + tmp;
     }
 #ifdef DEBUG_CHECK
