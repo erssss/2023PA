@@ -133,7 +133,7 @@ static bool make_token(char *q) {
                                substr_start, substr_len, max_len);
                         break;
                     } else {
-                        strcpy(tokens[nr_token++].str, substr_start);
+                        strncpy(tokens[nr_token++].str, substr_start, substr_len);
                     }
                     break;
 
