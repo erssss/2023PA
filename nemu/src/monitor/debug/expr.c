@@ -330,9 +330,9 @@ bool check_parentheses(int left, int right) {
 int get_priority(int type, int layer) {
     // if (layer != 0) {
         switch (type) {
-        // case NUM:
-        // case REG:
-        // case HEX:
+        case NUM:
+        case REG:
+        case HEX:
         case TK_MINUS:
         case TK_DER:
             return 0;
@@ -350,7 +350,6 @@ int get_priority(int type, int layer) {
         case '/':
             return 5;
         default:
-            return 5;
             printf("get_priority fail!\n");
             assert(0);
         }
