@@ -15,6 +15,10 @@ int dominant_op(int p, int q);
 bool check_parentheses(int left, int right);
 int get_priority(int type, int layer);
 
+
+# define DEBUG_CHECK 1
+
+
 /* TODO: Add more token types */
 enum {
     TK_NOTYPE = 256,
@@ -186,9 +190,10 @@ uint32_t hex_to_dec(char str[32]) {
     }
     return result;
 }
-
 uint32_t eval(int p, int q) {
+# ifdef DEBUG_CHECK
   printf("p = %d str[p] = %s, q = %d str[q] = %s\n",p,tokens[p].str,q,tokens[q].str);
+# endif
     if (p > q) {
         /*Bad expression */
         printf("p > q\n");
@@ -228,7 +233,9 @@ uint32_t eval(int p, int q) {
     } else {
         /* we should do more things here. */
         int op = dominant_op(p, q);
-        printf("\n===\nop = %d",op);
+# ifdef DEBUG_CHECK
+        printf("\n=== op = %d \n",op);
+# endif
         uint32_t val1 = eval(p, op - 1);
         uint32_t val2 = eval(op + 1, q);
 
@@ -274,7 +281,7 @@ int dominant_op(int p, int q) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
-        if (prt <= minPrt) {
+        if (prt < minPrt) {
             minPrt = prt;
             op = i;
         }
