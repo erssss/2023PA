@@ -90,15 +90,23 @@ static int cmd_info(char* args) {
 		return 0;
 	}
 	else if (strcmp(args,"r") == 0) {
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsl[i], reg_l(i));
+		for (int i = 0; i < 8; i++){
+			printf("%s  0x%x\t", regsl[i], reg_l(i));
+      if(i!=0&&i%2==0)
+          printf("\n");
+    }
 
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsw[i], reg_w(i));
+		for (int i = 0; i < 8; i++){
+			printf("%s  0x%x\t", regsw[i], reg_w(i));
+      if(i!=0&&i%2==0)
+          printf("\n");
 
-		for (int i = 0; i < 8; i++)
-			printf("%s  0x%x\n", regsb[i], reg_b(i));
-      
+    }
+		for (int i = 0; i < 8; i++){
+			printf("%s  0x%x\t", regsb[i], reg_b(i));
+      if(i!=0&&i%4==0)
+          printf("\n");
+    }
 		return 0;
 	}
 	return 0;

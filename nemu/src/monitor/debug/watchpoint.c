@@ -29,8 +29,8 @@ WP *new_wp() {
     WP *new_wp = free_;
     free_ = free_->next;
     new_wp->next = NULL;
-    // new_wp->next = head;
-    // head = new_wp;
+    new_wp->next = head;
+    head = new_wp;
     return new_wp;
 }
 
@@ -44,7 +44,7 @@ bool delete_wp(int no) {
     WP *tmp = head->next;
     WP *cur = head;
 
-    while (tmp && tmp->NO > no) {
+    while (tmp && tmp->NO < no) {
         tmp = tmp->next;
         cur = cur->next;
     }
