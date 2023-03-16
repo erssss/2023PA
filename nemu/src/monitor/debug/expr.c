@@ -188,7 +188,7 @@ uint32_t hex_to_dec(char str[32]) {
 }
 
 uint32_t eval(int p, int q) {
-  printf("p = %d , q = %d \n",p,q);
+  printf("p = %d str[p] = %s, q = %d str[q] = %s\n",p,tokens[p].str,q,tokens[q].str);
     if (p > q) {
         /*Bad expression */
         printf("p > q\n");
@@ -228,6 +228,7 @@ uint32_t eval(int p, int q) {
     } else {
         /* we should do more things here. */
         int op = dominant_op(p, q);
+        printf("\n===\nop = %d",op);
         uint32_t val1 = eval(p, op - 1);
         uint32_t val2 = eval(op + 1, q);
 
