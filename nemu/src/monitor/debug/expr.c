@@ -12,7 +12,7 @@ uint32_t expr(char *q, bool *success);
 uint32_t hex_to_dec(char str[32]);
 uint32_t eval(int p, int q);
 int dominant_op(int p, int q);
-bool paren_match(int left, int right);
+bool check_parentheses(int left, int right);
 int get_priority(int type, int layer);
 
 /* TODO: Add more token types */
@@ -160,7 +160,7 @@ uint32_t expr(char *q, bool *success) {
 
     /* TODO: Insert codes to evaluate the expression. */
     // TODO();
-    if (!paren_match(0, nr_token)) {
+    if (!check_parentheses(0, nr_token)) {
         *success = false;
         return 0;
     } else {
@@ -188,6 +188,7 @@ uint32_t hex_to_dec(char str[32]) {
 }
 
 uint32_t eval(int p, int q) {
+  printf("p = %d , q = %d",p,q);
     if (p > q) {
         /*Bad expression */
         printf("p > q\n");
@@ -212,9 +213,6 @@ uint32_t eval(int p, int q) {
             }
         }
     } else if (p == q - 1) {
-        /* The expression is surrounded by a matched pair of parentheses.
-         * If that is the case，just throw away the parentheses.
-         */
         if (tokens[p].type == TK_NOT) {
             return !eval(q, q);
         } else if (tokens[p].type == TK_MINUS) {
@@ -222,6 +220,9 @@ uint32_t eval(int p, int q) {
         }
 
     } else if (tokens[p].type == '(' && tokens[q].type == ')') {
+        /* The expression is surrounded by a matched pair of parentheses.
+         * If that is the case，just throw away the parentheses.
+         */
         return eval(p + 1, q - 1);
 
     } else {
@@ -271,7 +272,7 @@ int dominant_op(int p, int q) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
-        if (prt <= minPrt) {
+        if (prt < minPrt) {
             minPrt = prt;
             op = i;
         }
@@ -279,7 +280,7 @@ int dominant_op(int p, int q) {
     return op;
 }
 
-bool paren_match(int left, int right) {
+bool check_parentheses(int left, int right) {
     int layer = 0;
     for (int i = left; i < right; ++i) {
         if (tokens[i].type == '(')
