@@ -1,3 +1,4 @@
+#include "monitor/watchpoint.h"
 #include "nemu.h"
 #include "monitor/monitor.h"
 
@@ -9,6 +10,7 @@
 #define MAX_INSTR_TO_PRINT 10
 
 int nemu_state = NEMU_STOP;
+
 
 void exec_wrapper(bool);
 
@@ -30,6 +32,12 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
+    // PA1
+
+    if(check_wp()){
+      nemu_state = NEMU_STOP;
+    }
+
 
 #endif
 

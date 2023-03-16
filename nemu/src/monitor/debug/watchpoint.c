@@ -4,6 +4,7 @@
 #define NR_WP 32
 
 static WP wp_pool[NR_WP];
+// static int wp_pool[NR_WP];
 static WP *head, *free_;
 
 void init_wp_pool() {
@@ -22,7 +23,7 @@ void init_wp_pool() {
 
 WP *new_wp() {
     if (free_->next == NULL) {
-        printf("No free_ wp, new_wp fail!\n");
+        printf("No free wp, new_wp fail!\n");
         assert(0);
     }
 
@@ -75,10 +76,28 @@ void print_wp() {
         return;
     }
     printf("[watchpoints]:\n");
-    printf("No.\t\thitTimes\t\texpr\n");
+    printf("No.\t\thitTimes\texpr\n");
     WP *tmp = head;
     while (tmp != NULL) {
         printf("%d\t\t%d\t\t%s\n", tmp->NO, tmp->hitTimes, tmp->expr);
         tmp = tmp->next;
     }
+}
+
+bool check_wp(){
+  WP *tmp = head;
+  bool success;
+  bool changed = 0;
+  while(tmp){
+    uint32_t new_value = expr(tmp->expr, &success);
+    if(new_value != tmp->result){
+      changed = 1;
+      printf("watchpoint No. %d has changed, old_value = %d, new_value = %d",tmp->NO,tmp->result,new_value);
+      tmp->result = new_value;
+    }
+    tmp = tmp->next;
+  }
+
+  return changed;
+
 }
