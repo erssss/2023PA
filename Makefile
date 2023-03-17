@@ -19,10 +19,8 @@ NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 
-
 CURRENET_LINE_COUNT = $(shell find ./nemu/  -name "*.[ch]"  | xargs cat | grep -Ev "^$$" | wc -l)
 ADD_LINE_COUNT = $(shell expr $(CURRENET_LINE_COUNT) - 2817)
 count:
-	@echo "$(NO_COLOR)$(CURRENET_LINE_COUNT) $(OK_COLOR) lines in nemu now !"
-	@echo "$(NO_COLOR)$(ADD_LINE_COUNT) $(OK_COLOR) lines added now !"
-	
+	@echo "$(OK_COLOR)There are  $(ERROR_COLOR)$(CURRENET_LINE_COUNT) $(OK_COLOR) lines in nemu !"
+	@echo "$(OK_COLOR)Add  $(ERROR_COLOR)$(ADD_LINE_COUNT) $(OK_COLOR) lines already !"
