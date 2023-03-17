@@ -146,7 +146,7 @@ static int cmd_p(char *args){
 	if(success == false)
 	  printf("Expr calculation error!\n");
 	else
-	  printf("Expr value = %u\n",res);
+	  printf("Expr value = %d\n",res);
 
 	return 0;
 }
