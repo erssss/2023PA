@@ -150,6 +150,7 @@ static bool make_token(char *q) {
     }
 
     if (tokens[0].type == '-') {
+        printf("in -\n");
         tokens[0].type = TK_MINUS;
     } else if (tokens[0].type == '*') {
         tokens[0].type = TK_DER;
