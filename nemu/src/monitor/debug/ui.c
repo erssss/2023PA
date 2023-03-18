@@ -127,16 +127,18 @@ static int cmd_info(char* args) {
 static int cmd_x(char *args){
 
   if (args == NULL)
-    printf("cmd_x args is NULL!\n");
+    printf("cmd_x arguments is NULL!\n");
 
   int len = atoi(strtok(NULL, " "));;
   char *exp = strtok(NULL, " ");
 
 	uint32_t res;
   bool success;
+  printf("%s\n",exp);
   res = expr(exp,&success);
   if(!success)
 	  printf("Expr calculation error!\n");
+    return 0;
 
   for (int i = 0; i < len; i++) {
     printf("0x%08x\n", vaddr_read(res, 4));
