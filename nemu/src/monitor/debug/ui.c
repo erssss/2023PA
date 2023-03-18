@@ -99,21 +99,21 @@ static int cmd_si(char *args){
     //       printf("\n");
 
 void print_reg(){
+  printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
     for (int i = 0; i < 8; ++i) {
-      printf("%-8s0x%08x%16d\n", regsl[i], reg_l(i), reg_l(i));
-      if(i%2==1)
-          printf("\n");
-  }
-  printf("\n%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
-
-  for (int i = 0; i < 8; ++i) {
-      printf("%-8s0x%08x%16d\n", regsw[i], reg_w(i), reg_w(i));
+      printf("%-8s0x%08x%16d\t", regsl[i], reg_l(i), reg_l(i));
       if(i%2==1)
           printf("\n");
   }
 
   for (int i = 0; i < 8; ++i) {
-      printf("%-8s0x%08x%16d\n", regsb[i], reg_b(i), reg_b(i));
+      printf("%-8s0x%08x%16d\t", regsw[i], reg_w(i), reg_w(i));
+      if(i%2==1)
+          printf("\n");
+  }
+
+  for (int i = 0; i < 8; ++i) {
+      printf("%-8s0x%08x%16d\t", regsb[i], reg_b(i), reg_b(i));
       if(i%2==1)
           printf("\n");
   }
