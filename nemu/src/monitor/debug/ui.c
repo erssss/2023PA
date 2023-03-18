@@ -124,28 +124,9 @@ static int cmd_info(char *args) {
 
 /* x */
 static int cmd_x(char *args) {
-
-    // if (args == NULL)
-    //   printf("cmd_x arguments is NULL!\n");
-
-    // int len = atoi(strtok(NULL, " "));;
-    // // char *exp = strtok(NULL, " ");
-
-    // uint32_t res;
-    // bool success;
-    // printf("%s\n",args);
-    // res = expr(args,&success);
-    // if(success == false)
-    //   printf("Expr calculation error!\n");
-    //   return 0;
-
-    // for (int i = 0; i < len; i++) {
-    //   printf("0x%08x\n", vaddr_read(res, 4));
-    //   res += 4;
-    // }
-
     char *arg = strtok(NULL, " ");
     unsigned int cnt;
+    
     /* 长度 */
     if (arg == NULL || sscanf(arg, "%u", &cnt) != 1) {
         printf("'%s' should be an integer.\n", arg);
@@ -153,11 +134,13 @@ static int cmd_x(char *args) {
     }
     arg = strtok(NULL, " ");
     unsigned int addr;
+
     /* 基地址 */
     if (arg == NULL || sscanf(arg, "%x", &addr) != 1) {
         printf("'%s' must be an expression.\n", arg);
         return 0;
     }
+
     /* 扫描 */
     uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
@@ -169,11 +152,7 @@ static int cmd_x(char *args) {
         addr_b += 4;
     }
     printf("\n");
-    // for (int i = 0; i <= cnt; ++i) {
-    //     printf("%x: %02x %02x %02x %02x\n", addr, *addr_b, *(addr_b + 1),
-    //            *(addr_b + 2), *(addr_b + 3));
-    //     addr_b += 4, addr += 4;
-    // }
+
     return 0;
 }
 
