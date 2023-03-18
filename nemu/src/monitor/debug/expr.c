@@ -338,7 +338,7 @@ bool check_parentheses(int left, int right) {
 }
 
 int get_priority(int type, int layer) {
-    // if (layer == 0) { // 括弧优先
+    if (layer == 0) { // 括弧优先
         switch (type) {
         case REG:
         case HEX:
@@ -363,7 +363,7 @@ int get_priority(int type, int layer) {
             printf("get_priority fail!\n");
             assert(0);
         }
-    // } else {
-    //     return 0;
-    // }
+    } else {
+        return 0;
+    }
 }
