@@ -162,11 +162,12 @@ static int cmd_x(char *args) {
     // uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
         if (i % 4 == 0)
-            printf("\n0x%x: 0x%02x", addr + i, vaddr_read(addr + i, 1));
+            printf("\n0x%x: 0x%02x  ", addr + i, vaddr_read(addr + i, 1));
         else
             printf("0x%02x", vaddr_read(addr + i, 1));
         addr += 4;
     }
+    printf("\n");
     // for (int i = 0; i <= cnt; ++i) {
     //     printf("%x: %02x %02x %02x %02x\n", addr, *addr_b, *(addr_b + 1),
     //            *(addr_b + 2), *(addr_b + 3));
