@@ -135,8 +135,8 @@ static int cmd_x(char *args){
 	uint32_t res;
   bool success;
   printf("%s\n",exp);
-  res = expr(exp,&success);
-  if(!success)
+  res = expr(args,&success);
+  if(success == false)
 	  printf("Expr calculation error!\n");
     return 0;
 
