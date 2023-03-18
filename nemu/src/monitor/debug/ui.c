@@ -126,7 +126,7 @@ static int cmd_info(char *args) {
 static int cmd_x(char *args) {
     char *arg = strtok(NULL, " ");
     unsigned int cnt;
-    
+
     /* 长度 */
     if (arg == NULL || sscanf(arg, "%u", &cnt) != 1) {
         printf("'%s' should be an integer.\n", arg);
@@ -142,6 +142,7 @@ static int cmd_x(char *args) {
     }
 
     /* 扫描 */
+    printf("[Memory:]\n");
     uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
         if (i % 4 == 0)
