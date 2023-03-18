@@ -143,15 +143,20 @@ static int cmd_x(char *args) {
 
     /* 扫描 */
     printf("[Memory:]\n");
-    uint8_t *addr_b = guest_to_host(addr);
-    for (int i = 0; i < cnt; i++) {
-        if (i % 4 == 0)
-            printf("\n0x%x: %02x", addr + i, *(addr_b + 1));
-        else
-            printf("  %02x", *(addr_b + 1));
-        addr += 4;
-        addr_b += 4;
-    }
+    uint8_t *pos = guest_to_host(addr);
+    for (int i = 0; i <= cnt; ++i) {
+    printf("%x: %02x %02x %02x %02x\n", addr, *pos, *(pos + 1), *(pos + 2), *(pos + 3));
+    pos += 4, addr += 4;
+  }
+    // uint8_t *addr_b = guest_to_host(addr);
+    // for (int i = 0; i < cnt; i++) {
+    //     if (i % 4 == 0)
+    //         printf("\n0x%x: %02x", addr + i, *(addr_b + 1));
+    //     else
+    //         printf("  %02x", *(addr_b + 1));
+    //     addr += 4;
+    //     addr_b += 4;
+    // }
     printf("\n");
 
     return 0;
