@@ -56,12 +56,12 @@ static struct rule {
     {"==", TK_EQ},     // equal
     {"0[xX][0-9a-fA-F]+", HEX},
     {"0|[1-9][0-9]*", NUM},
+    {"\\$(eax|ecx|edx|ebx|esp|ebp|esi|edi|eip|ax|cx|dx|bx|sp|bp|si|di|al|cl|dl|bl|ah|ch|dh|bh)",REG},
     {"\\-", TK_CMINUS},
     {"\\*", TK_MUL},
     {"\\/", TK_DIV},
     {"\\(", TK_LP},
     {"\\)", TK_RP},
-    {"\\$(eax|ecx|edx|ebx|esp|ebp|esi|edi|eip|ax|cx|dx|bx|sp|bp|si|di|al|cl|dl|bl|ah|ch|dh|bh)",REG},
     {"&&", TK_AND},
     {"[\\|]{2}", TK_OR}, //{"\\|\\|",TK_OR},
     {"!=", TK_NEQ}};
