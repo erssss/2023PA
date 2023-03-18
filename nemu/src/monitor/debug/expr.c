@@ -149,12 +149,12 @@ static bool make_token(char *q) {
         }
     }
 
-    if (tokens[0].type == '-') {
-        // printf("in -\n");
-        tokens[0].type = TK_MINUS;
-    } else if (tokens[0].type == '*') {
-        tokens[0].type = TK_DER;
-    }
+    // if (tokens[0].type == '-') {
+    //     // printf("in -\n");
+    //     tokens[0].type = TK_MINUS;
+    // } else if (tokens[0].type == '*') {
+    //     tokens[0].type = TK_DER;
+    // }
 
     for (int j = 1; j < nr_token; ++j) {
       // 负数
@@ -354,6 +354,6 @@ int get_priority(int type, int layer) {
             assert(0);
         }
     } else {
-        return 6;
+        return 0;
     }
 }
