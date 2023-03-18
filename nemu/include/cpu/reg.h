@@ -66,6 +66,6 @@ static inline const char* reg_name(int index, int width) {
   }
 }
 
-int get_reg_val(const char *reg);
+int get_reg_val(char *reg);
 
 #endif
