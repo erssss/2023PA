@@ -261,9 +261,9 @@ uint32_t eval(int p, int q) {
     } else {
         /* we should do more things here. */
         int op = dominant_op(p, q);
-#ifdef DEBUG_CHECK
-        printf("\n=== op = %d \n", op);
-#endif
+// #ifdef DEBUG_CHECK
+//         printf("\n=== op = %d \n", op);
+// #endif
         uint32_t val1 = eval(p, op - 1);
         uint32_t val2 = eval(op + 1, q);
 
@@ -310,13 +310,16 @@ int dominant_op(int p, int q) {
         prt = get_priority(tokens[i].type, layer);
 
 #ifdef DEBUG_CHECK
-        printf("i = %d ; prt = %d ; %d\n", i, prt, tokens[i].type);
+        printf("i = %d ; prt = %d ; %s\n", i, prt, print_ch[tokens[i].type-256]);
 #endif
         if (prt < minPrt) {
             minPrt = prt;
             op = i;
         }
     }
+#ifdef DEBUG_CHECK
+    printf("op = %s",tokens[op].str);
+#endif
     return op;
 }
 
