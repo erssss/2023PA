@@ -104,7 +104,7 @@ static void gen_rand_expr(int depth) {
         gen_rand_expr(depth + 1);
         break;
     }
-    }
+}
 }
 
 int main(int argc, char *argv[]) {

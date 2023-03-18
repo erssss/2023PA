@@ -128,8 +128,8 @@ static bool make_token(char *q) {
                 case TK_NOTYPE:
                     break;
                 case NUM:
-                case REG:
                 case HEX:
+                case REG:
                     if (substr_len >= max_len) {
                         printf("str: %p 'p len %d out of the max size of char "
                                "array len %d!\n",
@@ -319,7 +319,7 @@ int dominant_op(int p, int q) {
 #ifdef DEBUG_CHECK
         printf("i = %d ; prt = %d ; %s\n", i, prt, print_ch[tokens[i].type-256]);
 #endif
-        if (prt < minPrt) { // 加上=从左往右
+        if (prt <= minPrt) { // 加上=从左往右
             minPrt = prt;
             op = i;
         }
