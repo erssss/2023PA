@@ -130,11 +130,11 @@ static int cmd_x(char *args){
     printf("cmd_x arguments is NULL!\n");
 
   int len = atoi(strtok(NULL, " "));;
-  char *exp = strtok(NULL, " ");
+  // char *exp = strtok(NULL, " ");
 
 	uint32_t res;
   bool success;
-  printf("%s\n",exp);
+  printf("%s\n",args);
   res = expr(args,&success);
   if(success == false)
 	  printf("Expr calculation error!\n");
