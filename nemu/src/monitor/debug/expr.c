@@ -54,7 +54,7 @@ static struct rule {
     {" +", TK_NOTYPE}, // spaces
     {"0x[1-9A-Fa-f][0-9A-Fa-f]*",HEX},
     {"0|[1-9][0-9]*", NUM},
-    {"\\$(eax|ecx|edx|ebx|esp|ebp|esi|edi|eip|ax|cx|dx|bx|sp|bp|si|di|al|cl|dl|bl|ah|ch|dh|bh)",REG},
+    {"\\$\\w+",REG},
     {"\\+", TK_PLUS},  // plus
     {"\\-", TK_CMINUS},
     {"\\*", TK_MUL},
