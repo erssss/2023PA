@@ -312,7 +312,7 @@ int dominant_op(int p, int q) {
 #ifdef DEBUG_CHECK
         printf("i = %d ; prt = %d ; %s\n", i, prt, print_ch[tokens[i].type-256]);
 #endif
-        if (prt <= minPrt) {
+        if (prt <= minPrt) { // 加上=从左往右
             minPrt = prt;
             op = i;
         }
@@ -338,7 +338,7 @@ bool check_parentheses(int left, int right) {
 }
 
 int get_priority(int type, int layer) {
-    // if (layer == 0) { // 括弧优先
+    if (layer == 0) { // 括弧优先
         switch (type) {
         case REG:
         case HEX:
@@ -363,7 +363,7 @@ int get_priority(int type, int layer) {
             printf("get_priority fail!\n");
             assert(0);
         }
-    // } else {
-    //     return 0;
-    // }
+    } else {
+        return 0;
+    }
 }
