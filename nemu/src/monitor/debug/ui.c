@@ -142,7 +142,7 @@ static int cmd_x(char *args) {
     }
 
     /* 扫描 */
-    printf("[Memory:]\n");
+    printf("[Memory:]");
     uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
         if (i % 4 == 0){
