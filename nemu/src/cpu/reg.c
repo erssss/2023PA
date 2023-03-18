@@ -46,19 +46,19 @@ int get_reg_val(char *reg){
 	int i;
   char* reg_ = strtok( reg, "$" );
 	for (i = 0; i < 8; i++){
-		if (strcmp(regsl[i] + 1, reg_) == 0){
+		if (strcmp(regsl[i], reg_) == 0){
 			return cpu.gpr[i]._32;
 		}
 	}
 
 	for (i = 0; i < 8; i++){
-		if (strcmp(regsw[i] + 1, reg_) == 0){
+		if (strcmp(regsw[i], reg_) == 0){
 			return cpu.gpr[i]._16;
 		}
 	}
 
 	for (i = 0; i < 8; i++){
-		if (strcmp(regsb[i] + 1, reg_) == 0){
+		if (strcmp(regsb[i], reg_) == 0){
 			return cpu.gpr[i % 4]._8[i / 4];
 		}
 	}
