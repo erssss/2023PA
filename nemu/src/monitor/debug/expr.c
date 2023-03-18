@@ -61,7 +61,7 @@ static struct rule {
     {"\\/", TK_DIV},
     {"\\(", TK_LP},
     {"\\)", TK_RP},
-    {"\\$[a-z]+", REG},
+    {"\\$(eax|ecx|edx|ebx|esp|ebp|esi|edi|eip|ax|cx|dx|bx|sp|bp|si|di|al|cl|dl|bl|ah|ch|dh|bh)",REG},
     {"&&", TK_AND},
     {"[\\|]{2}", TK_OR}, //{"\\|\\|",TK_OR},
     {"!=", TK_NEQ}};
