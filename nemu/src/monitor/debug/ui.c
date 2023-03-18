@@ -126,25 +126,42 @@ static int cmd_info(char* args) {
 /* x */
 static int cmd_x(char *args){
 
-  if (args == NULL)
-    printf("cmd_x arguments is NULL!\n");
+  // if (args == NULL)
+  //   printf("cmd_x arguments is NULL!\n");
 
-  int len = atoi(strtok(NULL, " "));;
-  // char *exp = strtok(NULL, " ");
+  // int len = atoi(strtok(NULL, " "));;
+  // // char *exp = strtok(NULL, " ");
 
-	uint32_t res;
-  bool success;
-  printf("%s\n",args);
-  res = expr(args,&success);
-  if(success == false)
-	  printf("Expr calculation error!\n");
-    return 0;
+	// uint32_t res;
+  // bool success;
+  // printf("%s\n",args);
+  // res = expr(args,&success);
+  // if(success == false)
+	//   printf("Expr calculation error!\n");
+  //   return 0;
 
-  for (int i = 0; i < len; i++) {
-    printf("0x%08x\n", vaddr_read(res, 4));
-    res += 4;
+  // for (int i = 0; i < len; i++) {
+  //   printf("0x%08x\n", vaddr_read(res, 4));
+  //   res += 4;
+  // }
+
+    /* extract the first argument */
+  char *arg = strtok(NULL, " ");
+  unsigned int cnt;
+  /* first argument unrecognized */
+  if (arg == NULL || sscanf(arg, "%u", &cnt) != 1)
+    printf("'%s' must be an integer.\n", arg);
+  arg = strtok(NULL, " ");
+  unsigned int addr;
+  /* second argument unrecognized */
+  if (arg == NULL || sscanf(arg, "%x", &addr) != 1)
+    printf("'%s' must be an expression.\n", arg);
+  /* address guest to host */
+  uint8_t *pos = guest_to_host(addr);
+  for (int i = 0; i <= cnt; ++i) {
+    printf("%x: %02x %02x %02x %02x\n", addr, *pos, *(pos + 1), *(pos + 2), *(pos + 3));
+    pos += 4, addr += 4;
   }
-
   return 0;
 
 }
