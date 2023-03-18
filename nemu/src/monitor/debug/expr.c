@@ -318,7 +318,7 @@ int dominant_op(int p, int q) {
         }
     }
 #ifdef DEBUG_CHECK
-    printf("op = %s",tokens[op].str);
+    printf("op = %s\n\n",tokens[op].str);
 #endif
     return op;
 }
