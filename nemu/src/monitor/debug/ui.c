@@ -145,22 +145,25 @@ static int cmd_x(char *args){
   //   res += 4;
   // }
 
-    /* extract the first argument */
   char *arg = strtok(NULL, " ");
   unsigned int cnt;
-  /* first argument unrecognized */
-  if (arg == NULL || sscanf(arg, "%u", &cnt) != 1)
-    printf("'%s' must be an integer.\n", arg);
+  /* 长度 */
+  if (arg == NULL || sscanf(arg, "%u", &cnt) != 1){
+    printf("'%s' should be an integer.\n", arg);
+    return 0;
+  }
   arg = strtok(NULL, " ");
   unsigned int addr;
-  /* second argument unrecognized */
-  if (arg == NULL || sscanf(arg, "%x", &addr) != 1)
+  /* 基地址 */
+  if (arg == NULL || sscanf(arg, "%x", &addr) != 1){
     printf("'%s' must be an expression.\n", arg);
-  /* address guest to host */
-  uint8_t *pos = guest_to_host(addr);
+    return 0;
+  }
+  /* 扫描 */
+  uint8_t *addr_b = guest_to_host(addr);
   for (int i = 0; i <= cnt; ++i) {
-    printf("%x: %02x %02x %02x %02x\n", addr, *pos, *(pos + 1), *(pos + 2), *(pos + 3));
-    pos += 4, addr += 4;
+    printf("%x: %02x %02x %02x %02x\n", addr, *addr_b, *(addr_b + 1), *(addr_b + 2), *(addr_b + 3));
+    addr_b += 4, addr += 4;
   }
   return 0;
 
