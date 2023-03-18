@@ -101,15 +101,21 @@ static int cmd_si(char *args){
 void print_reg(){
     for (int i = 0; i < 8; ++i) {
       printf("%-8s0x%08x%16d\n", regsl[i], reg_l(i), reg_l(i));
+      if(i%2==1)
+          printf("\n");
   }
-  printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
+  printf("\n%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
 
   for (int i = 0; i < 8; ++i) {
       printf("%-8s0x%08x%16d\n", regsw[i], reg_w(i), reg_w(i));
+      if(i%2==1)
+          printf("\n");
   }
 
   for (int i = 0; i < 8; ++i) {
       printf("%-8s0x%08x%16d\n", regsb[i], reg_b(i), reg_b(i));
+      if(i%2==1)
+          printf("\n");
   }
   return;
 }
