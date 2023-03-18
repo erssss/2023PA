@@ -166,6 +166,7 @@ static int cmd_x(char *args) {
         else
             printf("  %02x", *(addr_b + 1));
         addr += 4;
+        addr_b += 4;
     }
     printf("\n");
     // for (int i = 0; i <= cnt; ++i) {
