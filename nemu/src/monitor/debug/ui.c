@@ -81,23 +81,6 @@ static int cmd_si(char *args){
 }
 
 
-		// for (int i = 0; i < 8; i++){
-		// 	printf("%s  0x%x\t", regsl[i], reg_l(i));
-    //   if(i%2==1)
-    //       printf("\n");
-    // }
-
-		// for (int i = 0; i < 8; i++){
-		// 	printf("%s  0x%x\t", regsw[i], reg_w(i));
-    //   if(i%2==1)
-    //       printf("\n");
-
-    // }
-		// for (int i = 0; i < 8; i++){
-		// 	printf("%s  0x%x\t", regsb[i], reg_b(i));
-    //   if(i%2==1)
-    //       printf("\n");
-
 void print_reg(){
   printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
     for (int i = 0; i < 8; ++i) {

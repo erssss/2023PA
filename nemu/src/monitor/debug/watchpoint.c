@@ -79,7 +79,7 @@ void print_wp() {
     printf("No.\t\thitTimes\texpr\t\tvalue\n");
     WP *tmp = head;
     while (tmp != NULL) {
-        printf("%d\t\t%d\t\t%s\t\t%d\n", tmp->NO, tmp->hitTimes, tmp->expr,tmp->result);
+        printf("%-6d%-6d%-8d%-20s\n", tmp->NO, tmp->hitTimes,tmp->result, tmp->expr);
         tmp = tmp->next;
     }
 }
