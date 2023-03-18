@@ -254,6 +254,9 @@ uint32_t eval(int p, int q) {
         }else if (tokens[p].type == TK_DER){
             uint32_t addr=eval(p+1,q);
             uint32_t result=vaddr_read(addr,4);
+#ifdef DEBUG_CHECK
+            printf("addr_to_value: %u(0x%x) -> %d(0x%08x)\n",addr,addr,result,result);
+#endif
             return result;
         }
     } else if (tokens[p].type == TK_LP && tokens[q].type == TK_RP) {
