@@ -261,12 +261,12 @@ uint32_t eval(int p, int q) {
     } else {
         /* we should do more things here. */
         int op = dominant_op(p, q);
-// #ifdef DEBUG_CHECK
-//         printf("\n=== op = %d \n", op);
-// #endif
+
         uint32_t val1 = eval(p, op - 1);
         uint32_t val2 = eval(op + 1, q);
-
+#ifdef DEBUG_CHECK
+        printf("=== val1 = %d,val2 = %d \n", val1,val2);
+#endif
         switch (tokens[op].type) {
         case TK_PLUS:
             return val1 + val2;
