@@ -268,7 +268,7 @@ uint32_t eval(int p, int q) {
         uint32_t val2 = eval(op + 1, q);
 
         switch (tokens[op].type) {
-        case '+':
+        case TK_PLUS:
             return val1 + val2;
         case TK_CMINUS:
             return val1 - val2;
@@ -350,7 +350,7 @@ int get_priority(int type, int layer) {
         case TK_EQ:
         case TK_NEQ:
             return 3;
-        case '+':
+        case TK_PLUS:
         case TK_CMINUS:
             return 4;
         case TK_MUL:
