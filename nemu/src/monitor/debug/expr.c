@@ -312,7 +312,7 @@ int dominant_op(int p, int q) {
 #ifdef DEBUG_CHECK
         printf("i = %d ; prt = %d ; %s\n", i, prt, print_ch[tokens[i].type-256]);
 #endif
-        if (prt < minPrt) {
+        if (prt <= minPrt) {
             minPrt = prt;
             op = i;
         }
