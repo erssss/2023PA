@@ -251,8 +251,11 @@ uint32_t eval(int p, int q) {
             return !eval(q, q);
         } else if (tokens[p].type == TK_MINUS) {
             return -1 * eval(p + 1, q);
+        }else if (tokens[p].type == TK_DER){
+            uint32_t addr=eval(p+1,q);
+            uint32_t result=vaddr_read(addr,4);
+            return result;
         }
-
     } else if (tokens[p].type == TK_LP && tokens[q].type == TK_RP) {
         /* The expression is surrounded by a matched pair of parentheses.
          * If that is the case，just throw away the parentheses.
