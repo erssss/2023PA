@@ -29,12 +29,19 @@ enum {
     TK_OR,
     TK_NEQ,
     TK_MINUS,
-    TK_DER
+    TK_DER,
+    TK_PLUS,
+    TK_MUL,
+    TK_DIV,
+    TK_LP,
+    TK_RP,
+    TK_CMINUS
 };
 
 char *print_ch[] = {"TK_NOTYPE", "TK_EQ",    "HEX",    "NUM",
                     "REG",       "TK_AND",   "TK_NOT", "TK_OR",
-                    "TK_NEQ",    "TK_MINUS", "TK_DER"};
+                    "TK_NEQ",    "TK_MINUS", "TK_DER", "TK_PLUS",
+                    "TK_MUL",    "TK_DIV",   "TK_LP",  "TK_RP","TK_CMINUS"};
 
 static struct rule {
     char *regex;
@@ -45,15 +52,15 @@ static struct rule {
      * Pay attention to the precedence level of different rules.
      */
     {" +", TK_NOTYPE}, // spaces
-    {"\\+", '+'},      // plus
+    {"\\+", TK_PLUS},  // plus
     {"==", TK_EQ},     // equal
     {"0[xX][0-9a-fA-F]+", HEX},
     {"0|[1-9][0-9]*", NUM},
-    {"\\-", '-'},
-    {"\\*", '*'},
-    {"\\/", '/'},
-    {"\\(", '('},
-    {"\\)", ')'},
+    {"\\-", TK_CMINUS},
+    {"\\*", TK_MUL},
+    {"\\/", TK_DIV},
+    {"\\(", TK_LP},
+    {"\\)", TK_RP},
     {"\\$[a-z]+", REG},
     {"&&", TK_AND},
     {"[\\|]{2}", TK_OR}, //{"\\|\\|",TK_OR},
@@ -149,20 +156,20 @@ static bool make_token(char *q) {
         }
     }
 
-    if (tokens[0].type == '-') {
+    if (tokens[0].type == TK_CMINUS) {
         // printf("in -\n");
         tokens[0].type = TK_MINUS;
-    } else if (tokens[0].type == '*') {
+    } else if (tokens[0].type == TK_MUL) {
         tokens[0].type = TK_DER;
     }
 
     for (int j = 1; j < nr_token; ++j) {
-      // 负数
-        if (tokens[j].type == '-' && tokens[j - 1].type != ')' &&
+        // 负数
+        if (tokens[j].type == TK_CMINUS && tokens[j - 1].type != TK_RP &&
             (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
             tokens[j].type = TK_MINUS;
-      // 指针
-        else if (tokens[j].type == '*' && tokens[j - 1].type != ')' &&
+        // 指针
+        else if (tokens[j].type == TK_MUL && tokens[j - 1].type != TK_RP &&
                  (tokens[j - 1].type > REG || tokens[j - 1].type < HEX))
             tokens[j].type = TK_DER;
     }
@@ -190,8 +197,8 @@ uint32_t expr(char *q, bool *success) {
 
 uint32_t hex_to_dec(char str[32]) {
     uint result = 0;
-    for (int i = 2; i<10; ++i) {
-      // printf("i = %d, %c",i,str[i]);
+    for (int i = 2; i < 10; ++i) {
+        // printf("i = %d, %c",i,str[i]);
         int tmp = 0;
         if (str[i] >= '0' && str[i] <= '9') {
             tmp = (int)str[i] - (int)'0';
@@ -199,21 +206,21 @@ uint32_t hex_to_dec(char str[32]) {
             tmp = (int)str[i] - (int)'a' + 10;
         } else if (str[i] >= 'A' && str[i] <= 'F') {
             tmp = (int)str[i] - (int)'A' + 10;
-        }else 
-          break;
+        } else
+            break;
         result = 16 * result + tmp;
     }
 
 #ifdef DEBUG_CHECK
-    printf("hex_to_dec: %s to %d \n",str,result);
+    printf("hex_to_dec: %s to %d \n", str, result);
 #endif
     return result;
 }
 
 uint32_t eval(int p, int q) {
 #ifdef DEBUG_CHECK
-    printf("p = %d str[p] = %s, q = %d str[q] = %s\n", p, print_ch[tokens[p].type-256], q,
-           print_ch[tokens[q].type-256]);
+    printf("p = %d str[p] = %s, q = %d str[q] = %s\n", p,
+           print_ch[tokens[p].type - 256], q, print_ch[tokens[q].type - 256]);
 #endif
     if (p > q) {
         /*Bad expression */
@@ -245,7 +252,7 @@ uint32_t eval(int p, int q) {
             return -1 * eval(p + 1, q);
         }
 
-    } else if (tokens[p].type == '(' && tokens[q].type == ')') {
+    } else if (tokens[p].type == TK_LP && tokens[q].type == TK_RP) {
         /* The expression is surrounded by a matched pair of parentheses.
          * If that is the case，just throw away the parentheses.
          */
@@ -263,11 +270,11 @@ uint32_t eval(int p, int q) {
         switch (tokens[op].type) {
         case '+':
             return val1 + val2;
-        case '-':
+        case TK_CMINUS:
             return val1 - val2;
-        case '*':
+        case TK_MUL:
             return val1 * val2;
-        case '/':
+        case TK_DIV:
             return val1 / val2;
         case TK_EQ:
             return val1 == val2;
@@ -291,17 +298,17 @@ int dominant_op(int p, int q) {
     int prt = -1;
     int layer = 0;
     for (int i = p; i <= q; ++i) {
-        if (tokens[i].type == '(') {
+        if (tokens[i].type == TK_LP) {
             layer++;
             continue;
-        } else if (tokens[i].type == ')') {
+        } else if (tokens[i].type == TK_RP) {
             layer--;
             continue;
         } else if (get_priority(tokens[i].type, layer) == 0) {
             continue;
         }
         prt = get_priority(tokens[i].type, layer);
-        
+
 #ifdef DEBUG_CHECK
         printf("i = %d ; prt = %d ; %d\n", i, prt, tokens[i].type);
 #endif
@@ -316,9 +323,9 @@ int dominant_op(int p, int q) {
 bool check_parentheses(int left, int right) {
     int layer = 0;
     for (int i = left; i < right; ++i) {
-        if (tokens[i].type == '(')
+        if (tokens[i].type == TK_LP)
             layer++;
-        else if (tokens[i].type == ')')
+        else if (tokens[i].type == TK_RP)
             layer--;
     }
     if (layer == 0)
@@ -344,10 +351,10 @@ int get_priority(int type, int layer) {
         case TK_NEQ:
             return 3;
         case '+':
-        case '-':
+        case TK_CMINUS:
             return 4;
-        case '*':
-        case '/':
+        case TK_MUL:
+        case TK_DIV:
             return 5;
         default:
             printf("get_priority fail!\n");
