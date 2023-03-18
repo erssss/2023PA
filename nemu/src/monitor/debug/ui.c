@@ -80,6 +80,40 @@ static int cmd_si(char *args){
 	return 0;
 }
 
+
+		// for (int i = 0; i < 8; i++){
+		// 	printf("%s  0x%x\t", regsl[i], reg_l(i));
+    //   if(i%2==1)
+    //       printf("\n");
+    // }
+
+		// for (int i = 0; i < 8; i++){
+		// 	printf("%s  0x%x\t", regsw[i], reg_w(i));
+    //   if(i%2==1)
+    //       printf("\n");
+
+    // }
+		// for (int i = 0; i < 8; i++){
+		// 	printf("%s  0x%x\t", regsb[i], reg_b(i));
+    //   if(i%2==1)
+    //       printf("\n");
+
+void print_reg(){
+    for (int i = 0; i < 8; ++i) {
+      printf("%-8s0x%08x%16d\n", regsl[i], reg_l(i), reg_l(i));
+  }
+  printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
+
+  for (int i = 0; i < 8; ++i) {
+      printf("%-8s0x%08x%16d\n", regsw[i], reg_w(i), reg_w(i));
+  }
+
+  for (int i = 0; i < 8; ++i) {
+      printf("%-8s0x%08x%16d\n", regsb[i], reg_b(i), reg_b(i));
+  }
+  return;
+}
+
 /* info */
 static int cmd_info(char* args) {
 	if (args == NULL) {
@@ -89,15 +123,13 @@ static int cmd_info(char* args) {
 
   if (strcmp(args,"w") == 0) {
 		print_wp();
-		return 0;
 	}
 	else if (strcmp(args,"r") == 0) {
-    for (int i = 0; i < 8; ++i) {
-        int value = cpu.gpr[i]._32;
-        printf("%-8s0x%08x%16d\n", regsl[i], value, value);
-    }
-    printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
-    }
+    print_reg();
+  }
+  else{
+    printf("The arguments must be r or w!\n");
+  }
 
 	return 0;
 }
