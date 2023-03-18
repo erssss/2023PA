@@ -159,12 +159,12 @@ static int cmd_x(char *args) {
         return 0;
     }
     /* 扫描 */
-    // uint8_t *addr_b = guest_to_host(addr);
+    uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
         if (i % 4 == 0)
-            printf("\n0x%x: %02x", addr + i, vaddr_read(addr + i, 1));
+            printf("\n0x%x: %02x", addr + i, *(addr_b + 1));
         else
-            printf("  %02x", vaddr_read(addr + i, 1));
+            printf("  %02x", *(addr_b + 1));
         addr += 4;
     }
     printf("\n");
