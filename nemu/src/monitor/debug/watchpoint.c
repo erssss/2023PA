@@ -76,10 +76,10 @@ void print_wp() {
         return;
     }
     printf("[watchpoints]:\n");
-    printf("No.\t\thitTimes\texpr\t\tvalue\n");
+    printf("No.\thitTimes\tvalue\t\texpr\n");
     WP *tmp = head;
     while (tmp != NULL) {
-        printf("%-6d%-6d%-8d%-20s\n", tmp->NO, tmp->hitTimes,tmp->result, tmp->expr);
+        printf("%-8d%-8d%-32d%-32s\n", tmp->NO, tmp->hitTimes,tmp->result, tmp->expr);
         tmp = tmp->next;
     }
 }
