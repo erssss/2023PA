@@ -83,7 +83,7 @@ static int cmd_si(char *args){
 /* info */
 static int cmd_info(char* args) {
 	if (args == NULL) {
-		printf("args NULL in cmd_info\n");
+		printf("Command info should have a argument!\n");
 		return 0;
 	};
 
@@ -92,25 +92,13 @@ static int cmd_info(char* args) {
 		return 0;
 	}
 	else if (strcmp(args,"r") == 0) {
-		for (int i = 0; i < 8; i++){
-			printf("%s  0x%x\t", regsl[i], reg_l(i));
-      if(i%2==1)
-          printf("\n");
+    for (int i = 0; i < 8; ++i) {
+        int value = cpu.gpr[i]._32;
+        printf("%-8s0x%08x%16d\n", regsl[i], value, value);
+    }
+    printf("%-8s0x%08x%16d\n", "eip", cpu.eip, cpu.eip);
     }
 
-		for (int i = 0; i < 8; i++){
-			printf("%s  0x%x\t", regsw[i], reg_w(i));
-      if(i%2==1)
-          printf("\n");
-
-    }
-		for (int i = 0; i < 8; i++){
-			printf("%s  0x%x\t", regsb[i], reg_b(i));
-      if(i%2==1)
-          printf("\n");
-    }
-		return 0;
-	}
 	return 0;
 }
 
