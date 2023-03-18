@@ -354,6 +354,6 @@ int get_priority(int type, int layer) {
             assert(0);
         }
     } else {
-        return 0;
+        return 1;
     }
 }
