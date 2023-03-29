@@ -41,3 +41,31 @@ void reg_test() {
 
   assert(eip_sample == cpu.eip);
 }
+
+int get_reg_val(char *reg){
+	int i;
+  char* reg_ = strtok( reg, "$" );
+	for (i = 0; i < 8; i++){
+		if (strcmp(regsl[i], reg_) == 0){
+			return cpu.gpr[i]._32;
+		}
+	}
+
+	for (i = 0; i < 8; i++){
+		if (strcmp(regsw[i], reg_) == 0){
+			return cpu.gpr[i]._16;
+		}
+	}
+
+	for (i = 0; i < 8; i++){
+		if (strcmp(regsb[i], reg_) == 0){
+			return cpu.gpr[i % 4]._8[i / 4];
+		}
+	}
+
+	if (strcmp(reg_, "eip") == 0){
+		return cpu.eip;
+	}
+
+	return -1;
+}

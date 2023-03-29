@@ -1,3 +1,4 @@
+#include "monitor/watchpoint.h"
 #include "nemu.h"
 #include "monitor/monitor.h"
 
@@ -10,9 +11,11 @@
 
 int nemu_state = NEMU_STOP;
 
+
 void exec_wrapper(bool);
 
 /* Simulate how the CPU works. */
+// 指令执行主循环
 void cpu_exec(uint64_t n) {
   if (nemu_state == NEMU_END) {
     printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -29,6 +32,12 @@ void cpu_exec(uint64_t n) {
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
+    // PA1
+
+    if(check_wp()){
+      nemu_state = NEMU_STOP;
+    }
+
 
 #endif
 
