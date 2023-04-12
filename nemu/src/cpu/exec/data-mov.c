@@ -27,7 +27,7 @@ make_EHelper(pusha) {
   rtl_push(&cpu.edx);
   rtl_push(&cpu.ebx);
 
-  rtl_push(&t2);
+  rtl_push(&t0);
 
   rtl_push(&cpu.ebp);
   rtl_push(&cpu.esi);
@@ -41,7 +41,7 @@ make_EHelper(popa) {
   rtl_pop(&cpu.edi);
   rtl_pop(&cpu.esi);
   rtl_pop(&cpu.ebp);
-  rtl_pop(&t2);
+  rtl_pop(&t0);
 
   rtl_pop(&cpu.ebx);
   rtl_pop(&cpu.edx);
