@@ -50,6 +50,13 @@ typedef struct {
 
   } eflags;
 
+  struct IDTR{
+    uint32_t limit;
+    uint32_t base;
+  } idtr;
+
+  rtlreg_t cs;
+
 
 } CPU_state;
 
