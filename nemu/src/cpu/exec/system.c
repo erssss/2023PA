@@ -17,13 +17,13 @@ make_EHelper(lidt) {
 }
 
 make_EHelper(mov_r2cr) {
-  TODO();
+  // TODO();
 
   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
 }
 
 make_EHelper(mov_cr2r) {
-  TODO();
+  // TODO();
 
   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
 
@@ -33,7 +33,7 @@ make_EHelper(mov_cr2r) {
 }
 
 make_EHelper(int) {
-  TODO();
+  // TODO();
   // uint8_t NO = id_dest->val & 0xff;
   // raise_intr(NO,decoding.seq_eip);
 
