@@ -20,6 +20,13 @@ static bool is_skip_nemu;
 void diff_test_skip_qemu() { is_skip_qemu = true; }
 void diff_test_skip_nemu() { is_skip_nemu = true; }
 
+#define diff_test_printf(r,cpu_r) \
+  {\
+    diff = true;\
+    printf("EIP: %x\n",cpu.eip); \
+    printf("EAX in QEMU: %x\n",r); \
+    printf("EAX in NEMU: %x\n",cpu_r); }\
+
 #define regcpy_from_nemu(regs) \
   do { \
     regs.eax = cpu.eax; \
@@ -151,21 +158,21 @@ void difftest_step(uint32_t eip) {
   // Set `diff` as `true` if they are not the same.
   // TODO();
   if(r.eax != cpu.eax)
-    diff = true;
+    diff_test_printf(r.eax,cpu.eax)
   if(r.ecx != cpu.ecx)
-    diff = true;
+    diff_test_printf(r.ecx,cpu.ecx)
   if(r.edx != cpu.edx)
-    diff = true;
+    diff_test_printf(r.edx,cpu.edx)
   if(r.ebx != cpu.ebx)
-    diff = true;
+    diff_test_printf(r.ebx,cpu.ebx)
   if(r.esp != cpu.esp)
-    diff = true;
+    diff_test_printf(r.esp,cpu.esp)
   if(r.ebp != cpu.ebp)
-    diff = true;
+    diff_test_printf(r.ebp,cpu.ebp)
   if(r.esi != cpu.esi)
-    diff = true;
+    diff_test_printf(r.esi,cpu.esi)
   if(r.edi != cpu.edi)
-    diff = true;
+    diff_test_printf(r.edi,cpu.edi)
 
   if (diff) {
     nemu_state = NEMU_END;
