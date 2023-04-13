@@ -13,7 +13,7 @@ uint8_t pmem[PMEM_SIZE];
 
 uint32_t paddr_read(paddr_t addr, int len) {
   int map_id = is_mmio(addr);
-  // 好吧!可能导致隐式类型转换，不让用auto
+  // 好吧!不让用auto
   // auto map_id = is_mmio(addr);
   if(map_id!=-1)
 	  return (uint32_t)mmio_read(addr, len, map_id);
