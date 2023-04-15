@@ -7,7 +7,7 @@ extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
-
+// RTL 基本指令
 static inline void rtl_li(rtlreg_t *dest, uint32_t imm) { *dest = imm; }
 
 #define c_add(a, b) ((a) + (b))
@@ -178,53 +178,55 @@ static inline void rtl_pop(rtlreg_t *dest) {
     rtl_addi(&cpu.esp, &cpu.esp, 4);
 }
 
-static inline void rtl_eq0(rtlreg_t *dest, const rtlreg_t *src1) {
-    // dest <- (src1 == 0 ? 1 : 0)
-    // TODO();
-    rtl_sltui(dest, src1, 1);
+//更新eflags的各种标志位
+//判断src是否为0
+static inline void rtl_eq0(rtlreg_t* dest, const rtlreg_t* src1) {
+  // dest <- (src1 == 0 ? 1 : 0)
+  //TODO();
+  rtl_sltui(dest,src1,1);//如果src小于1（即=0），则dest置为1
 }
 
-static inline void rtl_eqi(rtlreg_t *dest, const rtlreg_t *src1, int imm) {
-    // dest <- (src1 == imm ? 1 : 0)
-    // TODO();
-    rtl_xori(dest, src1, imm);
-    rtl_eq0(dest, dest);
+//判断src和imm是否相等，即判断它俩异或是否为0
+static inline void rtl_eqi(rtlreg_t* dest, const rtlreg_t* src1, int imm) {
+  // dest <- (src1 == imm ? 1 : 0)
+  //TODO();
+  rtl_xori(dest,src1,imm);//dest=src^imm
+  rtl_eq0(dest,dest);
+}
+//如果src不为0，返回1
+static inline void rtl_neq0(rtlreg_t* dest, const rtlreg_t* src1) {
+  // dest <- (src1 != 0 ? 1 : 0)
+  //TODO();
+  rtl_eq0(dest,src1);
+  rtl_eq0(dest,dest);
+}
+//获得src1[width * 8 - 1]这一位
+static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
+  // dest <- src1[width * 8 - 1]
+  //TODO();
+  rtl_shri(dest,src1,width*8-1);//右移，直到最高位是需要的位
+  rtl_andi(dest,dest,0x1);
 }
 
-static inline void rtl_neq0(rtlreg_t *dest, const rtlreg_t *src1) {
-    // dest <- (src1 != 0 ? 1 : 0)
-    // TODO();
-    rtl_eq0(dest, src1);
-    rtl_eq0(dest, dest);
+static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
+  // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
+  //TODO();
+  rtl_andi(&t0,result,(0xffffffffu>>(4-width)*8));//只获取result的后width字节
+  rtl_eq0(&t0,&t0);
+  rtl_set_ZF(&t0);
+}
+//符号位
+static inline void rtl_update_SF(const rtlreg_t* result, int width) {
+  // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
+  //TODO();
+  rtl_msb(&t0,result,width);
+  rtl_set_SF(&t0);
+}
+static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {
+  rtl_update_ZF(result, width);
+  rtl_update_SF(result, width);
 }
 
-static inline void rtl_msb(rtlreg_t *dest, const rtlreg_t *src1, int width) {
-    // dest <- src1[width * 8 - 1]
-    // TODO();
-    rtl_shri(dest, src1, width * 8 - 1);
-    rtl_andi(dest, dest, 0x1);
-}
 
-static inline void rtl_update_ZF(const rtlreg_t *result, int width) {
-    // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-    // TODO();
-    assert(result != &t0);
-    rtl_andi(&t0, result, (0xffffffffu >> (4 - width) * 8));
-    rtl_eq0(&t0, &t0);
-    rtl_set_ZF(&t0);
-}
-
-static inline void rtl_update_SF(const rtlreg_t *result, int width) {
-    // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
-    // TODO();
-    assert(result != &t0);
-    rtl_msb(&t0, result, width);
-    rtl_set_SF(&t0);
-}
-
-static inline void rtl_update_ZFSF(const rtlreg_t *result, int width) {
-    rtl_update_ZF(result, width);
-    rtl_update_SF(result, width);
-}
 
 #endif

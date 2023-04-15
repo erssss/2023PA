@@ -39,11 +39,13 @@ static inline make_DopHelper(SI) {
    op->simm = ???
    */
   // TODO();
+  // 从 eip 处读取 op->width 个字节的内存
+  // 并把结果转为有符号立即数，然后将它赋给op->simm
   op->simm = instr_fetch(eip, op->width);
-  if(op->width==1)
-    op->simm=(int8_t)op->simm;
-  else
-    op->simm=(int32_t)op->simm;
+  if(op->width==1)//宽为1字节，则转为8位有符号数
+    op->simm = (int8_t)op->simm;
+  else //宽为4字节，则转为32位有符号数
+    op->simm = (int32_t)op->simm;
 
   rtl_li(&op->val, op->simm);
 
