@@ -23,9 +23,9 @@ void diff_test_skip_nemu() { is_skip_nemu = true; }
 #define diff_test_printf(r,cpu_r) \
   {\
     diff = true;\
-    printf("EIP: %x\n",cpu.eip); \
-    printf("EAX in QEMU: %x\n",r); \
-    printf("EAX in NEMU: %x\n",cpu_r); }\
+    printf("EIP = %x\n",cpu.eip); \
+    printf("QEMU EAX: %x\n",r); \
+    printf("NEMU EAX: %x\n",cpu_r); }\
 
 #define regcpy_from_nemu(regs) \
   do { \

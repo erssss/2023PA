@@ -28,6 +28,7 @@ void cpu_exec(uint64_t n) {
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
+    // 每执行一条指令，就会调用一次exec_wrapper函数，其中包括取指、指令译码、指令执行三个步骤
     exec_wrapper(print_flag);
 
 #ifdef DEBUG

@@ -36,19 +36,18 @@ typedef struct {
     };
   };
   vaddr_t eip;
-  struct bs {
-      uint32_t CF:1;
-      uint32_t one:1;
-      uint32_t :4;
-      uint32_t ZF:1;
-      uint32_t SF:1;
-      uint32_t :1;
-      uint32_t IF:1;
-      uint32_t :1;
-      uint32_t OF:1;
-      uint32_t :20;
-
-  } eflags;
+  //定义eflags寄存器，算术时用
+  struct{
+    uint32_t CF:1;
+    unsigned:5;
+    uint32_t ZF:1;
+    uint32_t SF:1;
+    unsigned:1;
+    uint32_t IF:1;
+    unsigned:1;
+    uint32_t OF:1;
+    unsigned:20;
+  }eflags;
 
   struct IDTR{
     uint32_t limit;
