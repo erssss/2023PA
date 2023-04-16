@@ -8,7 +8,7 @@ extern const rtlreg_t tzero;
 
 /* RTL basic instructions */
 // RTL 基本指令
- inline void rtl_li(rtlreg_t *dest, uint32_t imm) { *dest = imm; }
+void rtl_li(rtlreg_t *dest, uint32_t imm) { *dest = imm; }
 
 #define c_add(a, b) ((a) + (b))
 #define c_sub(a, b) ((a) - (b))
@@ -42,7 +42,7 @@ make_rtl_arith_logic(sar)
 make_rtl_arith_logic(slt) 
 make_rtl_arith_logic(sltu)
 
- inline void rtl_mul(rtlreg_t *dest_hi, rtlreg_t *dest_lo,
+static inline void rtl_mul(rtlreg_t *dest_hi, rtlreg_t *dest_lo,
                   const rtlreg_t *src1,
                   const rtlreg_t *src2) {
     asm volatile("mul %3"
