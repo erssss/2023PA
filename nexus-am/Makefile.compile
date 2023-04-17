@@ -83,6 +83,6 @@ DEPS = $(addprefix $(DST_DIR)/, $(addsuffix .d, $(basename $(SRCS))))
 am:
 	@$(MAKE) -C $(AM_HOME)
 # 有点bug，先这么凑活修复下
-# $(sort libs): %:
+# $(sort $(LIBS)): %:
 $(sort libs): %:
 	-@$(MAKE) -C $(AM_HOME)/libs/$*
