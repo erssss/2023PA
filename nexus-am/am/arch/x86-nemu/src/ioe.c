@@ -26,6 +26,7 @@ void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
     //   fb[i] = i;
     // }
   // fix: 好迷惑？？全部注释还是能跑
+  // done:不迷惑了谢谢
   int col, row;
   for (row = y; row < y + h; row++)
     for (col = x; col < x + w; col++) 
