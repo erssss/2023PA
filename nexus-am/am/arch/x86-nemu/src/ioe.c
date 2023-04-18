@@ -36,10 +36,13 @@ void _draw_rect(const uint32_t *pixels, int x, int y, int w, int h) {
 
 void _draw_sync() {}
 
-int _read_key () {
-  if (inb(0x64)) // 状态寄存器
-    return inl(0x60) ; // 数据寄存器
-  else
+#define I8042_DATA_PORT 0x60
+#define I8042_STATUS_PORT 0x64
+#define I8042_STATUS_HASKEY_MASK 0x1
+int _read_key() {
+  if (inb(I8042_STATUS_PORT) & I8042_STATUS_HASKEY_MASK){
+    return inl(I8042_DATA_PORT);
+  }else{
     return _KEY_NONE;
+  }
 }
-
