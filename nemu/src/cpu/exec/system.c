@@ -1,88 +1,88 @@
-// #include "cpu/exec.h"
+#include "cpu/exec.h"
 
-// void diff_test_skip_qemu();
-// void diff_test_skip_nemu();
+void diff_test_skip_qemu();
+void diff_test_skip_nemu();
 
-// // make_DHelper(lidt_a){
-// //   decode_op_a(eip,id_dest,true);
-// // }
-
-// make_EHelper(lidt) {
-//   // TODO();
-//   t1 = id_dest->val;
-//   rtl_lm(&t0,&t1,2);
-// 	cpu.idtr.limit = t0;
-
-//   t1 = id_dest->val + 2;
-//   rtl_lm(&t0,&t1,4);
-//   cpu.idtr.base = t0;
-
-//   print_asm_template1(lidt);
+// make_DHelper(lidt_a){
+//   decode_op_a(eip,id_dest,true);
 // }
 
-// make_EHelper(mov_r2cr) {
-//   TODO();
+make_EHelper(lidt) {
+  // TODO();
+  t1 = id_dest->val;
+  rtl_lm(&t0,&t1,2);
+	cpu.idtr.limit = t0;
 
-//   print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
-// }
+  t1 = id_dest->val + 2;
+  rtl_lm(&t0,&t1,4);
+  cpu.idtr.base = t0;
 
-// make_EHelper(mov_cr2r) {
-//   TODO();
+  print_asm_template1(lidt);
+}
 
-//   print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
+make_EHelper(mov_r2cr) {
+  TODO();
 
-// #ifdef DIFF_TEST
-//   diff_test_skip_qemu();
-// #endif
-// }
+  print_asm("movl %%%s,%%cr%d", reg_name(id_src->reg, 4), id_dest->reg);
+}
 
-// make_EHelper(int) {
-//   // TODO();
-//   extern void raise_intr(uint8_t NO, vaddr_t save_addr);
-//   uint8_t NO = id_dest->val & 0xff;
-//   raise_intr(NO,decoding.seq_eip);
+make_EHelper(mov_cr2r) {
+  TODO();
 
-//   print_asm("int %s", id_dest->str);
+  print_asm("movl %%cr%d,%%%s", id_src->reg, reg_name(id_dest->reg, 4));
 
-// #ifdef DIFF_TEST
-//   diff_test_skip_nemu();
-// #endif
-// }
+#ifdef DIFF_TEST
+  diff_test_skip_qemu();
+#endif
+}
 
-// make_EHelper(iret) {
-//   // TODO();
-//   rtl_pop(&cpu.eip);
-// 	rtl_pop(&cpu.cs);
-// 	rtl_pop(&t0);
-//   memcpy(&cpu.eflags,&t0,sizeof(cpu.eflags));
-// 	decoding.jmp_eip = 1;
-//   decoding.seq_eip = cpu.eip;
+make_EHelper(int) {
+  // TODO();
+  extern void raise_intr(uint8_t NO, vaddr_t save_addr);
+  uint8_t NO = id_dest->val & 0xff;
+  raise_intr(NO,decoding.seq_eip);
 
-//   print_asm("iret");
-// }
+  print_asm("int %s", id_dest->str);
 
-// uint32_t pio_read(ioaddr_t, int);
-// void pio_write(ioaddr_t, int, uint32_t);
+#ifdef DIFF_TEST
+  diff_test_skip_nemu();
+#endif
+}
 
-// make_EHelper(in) {
-//   // TODO();
-//   t1 = pio_read(id_src->val, id_dest->width);
-// 	operand_write(id_dest, &t1);
+make_EHelper(iret) {
+  // TODO();
+  rtl_pop(&cpu.eip);
+	rtl_pop(&cpu.cs);
+	rtl_pop(&t0);
+  memcpy(&cpu.eflags,&t0,sizeof(cpu.eflags));
+	decoding.jmp_eip = 1;
+  decoding.seq_eip = cpu.eip;
 
-//   print_asm_template2(in);
+  print_asm("iret");
+}
 
-// #ifdef DIFF_TEST
-//   diff_test_skip_qemu();
-// #endif
-// }
+uint32_t pio_read(ioaddr_t, int);
+void pio_write(ioaddr_t, int, uint32_t);
 
-// make_EHelper(out) {
-//   // TODO();
-//   pio_write(id_dest->val, id_src->width, id_src->val);
+make_EHelper(in) {
+  // TODO();
+  t1 = pio_read(id_src->val, id_dest->width);
+	operand_write(id_dest, &t1);
 
-//   print_asm_template2(out);
+  print_asm_template2(in);
 
-// #ifdef DIFF_TEST
-//   diff_test_skip_qemu();
-// #endif
-// }
+#ifdef DIFF_TEST
+  diff_test_skip_qemu();
+#endif
+}
+
+make_EHelper(out) {
+  // TODO();
+  pio_write(id_dest->val, id_src->width, id_src->val);
+
+  print_asm_template2(out);
+
+#ifdef DIFF_TEST
+  diff_test_skip_qemu();
+#endif
+}
