@@ -31,7 +31,7 @@ int main() {
     init_fs();
 
     // uint32_t entry = loader(NULL, NULL);
-    uint32_t entry = loader(NULL, "/bin/text"); // 加载用户程序
+    uint32_t entry = loader(NULL, "/bin/pal"); // 加载用户程序
     ((void (*)(void))entry)();
 
     panic("Should not reach here");
