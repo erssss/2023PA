@@ -46,7 +46,7 @@ int sys_write(int fd, void *buf, size_t len) {
         }
         return len;
     } else if (fd >= 3) {
-        fs_write(fd, buf, len);
+        return fs_write(fd, buf, len);
     } else
         panic("Unhandled fd=%d", fd);
     return -1;
