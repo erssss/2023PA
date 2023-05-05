@@ -41,43 +41,21 @@ void init_fs() {
     // Log("set FD_DB size = %d", file_table[FD_FB].size);
 }
 
-#define concat(x, y) x##y
-#define GET_FS_POINTER(ptr)                                                    \
-    size_t concat(fs_, ptr)(int fd) {                                          \
-        assert(fd >= 0 && fd < NR_FILES);                                      \
-        return file_table[fd].ptr;                                             \
-    }
 
-// 返回文件大小
-GET_FS_POINTER(size);
+size_t fs_size(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].size;
+}
 
-#undef GET_FS_POINTER
+off_t fs_disk_offset(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].disk_offset;
+}
 
-#define GET_FS_POINTER(ptr)                                                    \
-    off_t concat(fs_, ptr)(int fd) {                                          \
-        assert(fd >= 0 && fd < NR_FILES);                                      \
-        return file_table[fd].ptr;                                             \
-    }
-
-// 磁盘偏移
-GET_FS_POINTER(disk_offset);
-// 读写指针
-GET_FS_POINTER(open_offset);
-
-// size_t fs_size(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].size;
-// }
-
-// off_t fs_disk_offset(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].disk_offset;
-// }
-
-// off_t fs_open_offset(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].open_offset;
-// }
+off_t fs_open_offset(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].open_offset;
+}
 
 // 将读写偏移指针设置为n
 void set_open_offset(int fd, int n) {
