@@ -94,11 +94,11 @@ int fs_open(const char *filename, int flags, int mode) {
     Log("fs_open");
     for (int i = 0; i < NR_FILES; ++i) {
         if (strcmp(filename, file_table[i].name) == 0) {
-            Log("filename = %s",filename);
             file_table[i].open_offset=0;
             return i;
         }
     }
+    Log("filename = %s",filename);
     panic("file not exist in file_table!");
     return -1;
 }
