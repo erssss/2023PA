@@ -38,10 +38,10 @@ make_EHelper(mov_cr2r) {
   diff_test_skip_qemu();
 #endif
 }
+  extern void raise_intr(uint8_t NO, vaddr_t save_addr);
 
 make_EHelper(int) {
   // TODO();
-  extern void raise_intr(uint8_t NO, vaddr_t save_addr);
   uint8_t NO = id_dest->val & 0xff;
   raise_intr(NO,decoding.seq_eip);
 
