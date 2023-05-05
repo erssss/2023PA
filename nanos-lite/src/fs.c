@@ -34,38 +34,43 @@ static Finfo file_table[] __attribute__((used)) = {
 
 void init_fs() {
     // TODO: initialize the size of /dev/fb
+    // extern void get_screen(int *s_width, int *s_height);
+    // int width = 0, height = 0;
+    // get_screen(&width, &height);
+    // file_table[FD_FB].size = width * height * sizeof(uint32_t);
+    // Log("set FD_DB size = %d", file_table[FD_FB].size);
 }
 
-#define concat(x, y) x##y
-#define GET_FS_POINTER(ptr)                                                    \
-    size_t concat(fs_, ptr)(int fd) {                                           \
-        assert(fd >= 0 && fd < NR_FILES);                                      \
-        return file_table[fd].ptr;                                             \
-    }
+// #define concat(x, y) x##y
+// #define GET_FS_POINTER(ptr)                                                    
+//     size_t concat(fs_, ptr)(int fd) {                                          
+//         assert(fd >= 0 && fd < NR_FILES);                                      
+//         return file_table[fd].ptr;                                             
+//     }
 
-// 返回文件大小
-GET_FS_POINTER(size);
-// 磁盘偏移
-GET_FS_POINTER(disk_offset);
-// 读写指针
-GET_FS_POINTER(open_offset);
+// // 返回文件大小
+// GET_FS_POINTER(size);
+// // 磁盘偏移
+// GET_FS_POINTER(disk_offset);
+// // 读写指针
+// GET_FS_POINTER(open_offset);
 
-// size_t fs_size(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].size;
-// }
+size_t fs_size(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].size;
+}
 
-// //磁盘偏移
-// off_t fs_disk_offset(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].fs_disk_offset;
-// }
+//磁盘偏移
+off_t fs_disk_offset(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].disk_offset;
+}
 
-// //读写指针
-// off_t fs_open_offset(int fd){
-//   assert(fd>=0&&fd<NR_FILES);
-//   return file_table[fd].open_offset;
-// }
+//读写指针
+off_t fs_open_offset(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].open_offset;
+}
 
 // 将读写偏移指针设置为n
 void set_open_offset(int fd, int n) {
