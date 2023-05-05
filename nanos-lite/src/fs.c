@@ -94,8 +94,8 @@ int fs_open(const char *filename, int flags, int mode) {
     Log("fs_open: NR_FILES = %d",NR_FILES);
     Log("filename = %s",filename);
     for (int i = 0; i < NR_FILES; ++i) {
+        Log("file_table[i].name = %s",file_table[i].name);
         if (strcmp(filename, file_table[i].name) == 0) {
-            Log("file_table[i].name = %s",file_table[i].name);
             file_table[i].open_offset=0;
             return i;
         }
