@@ -15,8 +15,8 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
     rtl_push(&t0);
 
     vaddr_t gate_addr = cpu.idtr.base + NO * sizeof(GateDesc);
-    Log("cpu.idtr.base = %d NO = %d LIMIT = %d",cpu.idtr.base,NO,cpu.idtr.limit);
-    // assert(gate_addr <= cpu.idtr.base + cpu.idtr.limit);
+    // Log("cpu.idtr.base = %d NO = %d LIMIT = %d",cpu.idtr.base,NO,cpu.idtr.limit);
+    assert(gate_addr <= cpu.idtr.base + cpu.idtr.limit);
 
     uint32_t eip_low, eip_high, offset;
     eip_low = vaddr_read(gate_addr, 2);
