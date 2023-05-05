@@ -1,8 +1,8 @@
 #include "common.h"
 
 #define DEFAULT_ENTRY ((void *)0x4000000)
-#define RAMDISK_SIZE ((&ramdisk_end)-(&ramdisk_start))
-extern uint8_t ramdisk_start,ramdisk_end;
+// #define RAMDISK_SIZE ((&ramdisk_end)-(&ramdisk_start))
+// extern uint8_t ramdisk_start,ramdisk_end;
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
 
 extern int fs_open(const char *pathname, int flags, int mode);
