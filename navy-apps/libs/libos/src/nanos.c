@@ -31,8 +31,22 @@ int _write(int fd, void *buf, size_t count){
 }
 
 void *_sbrk(intptr_t increment){
+  // 1. program break一开始的位置位于`_end`
+  extern char end;
+  static uintptr_t program_break=(uintptr_t)&end;//初始化pb
+  // 2. 被调用时, 根据记录的program break位置和参数`increment`, 计算出新program break
+  uintptr_t new_break=program_break+increment;
+  // 3. 系统调用，设置新的program break
+  int r=_syscall_(SYS_brk,new_break,0,0);
+  if(r==0){// 4. 分配成功，返回0
+    uintptr_t temp=program_break;//旧的pb位置
+    program_break=new_break; // 更新之前记录的 program break 的位置
+    return (void*)temp; // 将旧 program break 的位置作为 `_sbrk()` 的返回值返回
+  }
+  // 5. 若该系统调用失败, `_sbrk()` 会返回 `-1`
   return (void *)-1;
 }
+
 
 int _read(int fd, void *buf, size_t count) {
   _exit(SYS_read);
