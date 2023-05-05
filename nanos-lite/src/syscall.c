@@ -1,6 +1,21 @@
 #include "syscall.h"
 #include "common.h"
 
+extern ssize_t fs_read(int fd, void *buf, size_t len);
+extern ssize_t fs_write(int fd, const void *buf, size_t len);
+extern int fs_open(const char *pathname, int flags, int mode);
+extern off_t fs_lseek(int fd, off_t offset, int whence);
+extern int fs_close(int fd);
+
+int sys_brk(int addr) { return 0; }
+
+int sys_open(const char *filename) { return fs_open(filename, 0, 0); }
+int sys_read(int fd, void *buf, size_t len) { return fs_read(fd, buf, len); }
+int sys_close(int fd) { return fs_close(fd); }
+int sys_lseek(int fd, off_t offset, int whence) {
+    return fs_lseek(fd, offset, whence);
+}
+
 // #define SYSCALL_ARG1(r) 0
 // #define SYSCALL_ARG2(r) 0
 // #define SYSCALL_ARG3(r) 0
@@ -30,10 +45,13 @@ int sys_write(int fd, void *buf, size_t len) {
             _putc(ch); // 将字符ch输出到串口
         }
         return len;
-    }
-    else panic("Unhandled fd=%d",fd);
+    } else if (fd >= 3) {
+        fs_write(fd, buf, len);
+    } else
+        panic("Unhandled fd=%d", fd);
     return -1;
 }
+
 
 _RegSet *do_syscall(_RegSet *r) {
     uintptr_t a[4];
@@ -52,7 +70,21 @@ _RegSet *do_syscall(_RegSet *r) {
     case SYS_write:
         SYSCALL_ARG1(r) = sys_write(a[1], (void *)a[2], a[3]);
         break;
-
+    case SYS_brk:
+        SYSCALL_ARG1(r) = sys_brk(a[1]);
+        break;
+    case SYS_open:
+        SYSCALL_ARG1(r) = sys_open((char *)a[1]);
+        break;
+    case SYS_read:
+        SYSCALL_ARG1(r) = sys_read(a[1], (void *)a[2], a[3]);
+        break;
+    case SYS_close:
+        SYSCALL_ARG1(r) = sys_close(a[1]);
+        break;
+    case SYS_lseek:
+        SYSCALL_ARG1(r) = sys_lseek(a[1], a[2], a[3]);
+        break;
     default:
         panic("Unhandled syscall ID = %d", a[0]);
     }
