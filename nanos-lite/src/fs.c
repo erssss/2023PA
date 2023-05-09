@@ -5,7 +5,7 @@ extern void ramdisk_write(void *buf, off_t offset, size_t len);
 typedef struct {
     char *name;        // 文件名
     size_t size;       // 文件大小
-    off_t fs_disk_offset; // 文件在ramdisk上的偏移
+    off_t disk_offset; // 文件在ramdisk上的偏移
     off_t open_offset; // 文件被打开之后的读写指针
 } Finfo;
 
@@ -36,13 +36,13 @@ void init_fs() {
     // TODO: initialize the size of /dev/fb
     extern void getScreen(int *width, int *height);
     int width = 0, height = 0;
-    getScreen(&width, &height); // 获取屏幕宽高
+    getScreen(&width, &height);
     // FD_FB是显存的文件描述符
     file_table[FD_FB].size = width * height * sizeof(uint32_t); // 每个像素4B
     Log("FD_FB size=%d", file_table[FD_FB].size);
 }
 
-/*
+
 #define concat(x, y) x##y
 #define GET_FS_POINTER(ptr)                                                    \
     size_t concat(fs_, ptr)(int fd) {                                          \
@@ -62,25 +62,25 @@ GET_FS_POINTER(size);
     }
 
 // 磁盘偏移
-GET_FS_POINTER(fs_disk_offset);
+GET_FS_POINTER(disk_offset);
 // 读写指针
 GET_FS_POINTER(open_offset);
-*/
 
-size_t fs_size(int fd) {
-    assert(fd >= 0 && fd < NR_FILES);
-    return file_table[fd].size;
-}
 
-off_t fs_disk_offset(int fd) {
-    assert(fd >= 0 && fd < NR_FILES);
-    return file_table[fd].fs_disk_offset;
-}
+// size_t fs_size(int fd) {
+//     assert(fd >= 0 && fd < NR_FILES);
+//     return file_table[fd].size;
+// }
 
-off_t fs_open_offset(int fd) {
-    assert(fd >= 0 && fd < NR_FILES);
-    return file_table[fd].open_offset;
-}
+// off_t fs_disk_offset(int fd) {
+//     assert(fd >= 0 && fd < NR_FILES);
+//     return file_table[fd].fs_disk_offset;
+// }
+
+// off_t fs_open_offset(int fd) {
+//     assert(fd >= 0 && fd < NR_FILES);
+//     return file_table[fd].open_offset;
+// }
 
 // 将读写偏移指针设置为n
 void set_open_offset(int fd, int n) {
