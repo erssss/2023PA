@@ -159,7 +159,7 @@ ssize_t fs_write(int fd, void *buf, size_t len) {
 
 // 根据whence不同，将读写偏移指针移动到某处
 off_t fs_lseek(int fd, off_t offset, int whence) {
-    Log("fs_lseek");
+    // Log("fs_lseek");
     switch (whence) {
     case SEEK_SET: // 开始位置+offset
         set_open_offset(fd, offset);
