@@ -1,5 +1,6 @@
 #include "fs.h"
 
+extern size_t events_read(void *buf, size_t len);
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
 extern void ramdisk_write(void *buf, off_t offset, size_t len);
 typedef struct {
@@ -42,7 +43,6 @@ void init_fs() {
     Log("FD_FB size=%d", file_table[FD_FB].size);
 }
 
-
 #define concat(x, y) x##y
 #define GET_FS_POINTER(ptr)                                                    \
     size_t concat(fs_, ptr)(int fd) {                                          \
@@ -56,7 +56,7 @@ GET_FS_POINTER(size);
 #undef GET_FS_POINTER
 
 #define GET_FS_POINTER(ptr)                                                    \
-    off_t concat(fs_, ptr)(int fd) {                                          \
+    off_t concat(fs_, ptr)(int fd) {                                           \
         assert(fd >= 0 && fd < NR_FILES);                                      \
         return file_table[fd].ptr;                                             \
     }
@@ -65,7 +65,6 @@ GET_FS_POINTER(size);
 GET_FS_POINTER(disk_offset);
 // 读写指针
 GET_FS_POINTER(open_offset);
-
 
 // size_t fs_size(int fd) {
 //     assert(fd >= 0 && fd < NR_FILES);
@@ -125,7 +124,9 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     if (n > len) {
         n = len; // 实际读取的长度不能超过n
     }
-    if (fd == FD_DISPINFO) {
+    if (fd == FD_EVENTS) {
+        return events_read(buf, len);
+    } else if (fd == FD_DISPINFO) {
         dispinfo_read(buf, fs_open_offset(fd), n);
     } else
         // 从文件当前的位置读len个字节到buf
