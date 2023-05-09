@@ -9,7 +9,6 @@ unsigned long _uptime(); // 返回系统启动后经过的毫秒数
 extern int _read_key(); // 获得按键的键盘码，若无按键，则返回_KEY_NONE
 // 把事件写入buf中，最长len字节，返回实际写入字节数
 size_t events_read(void *buf, size_t len) {
-    char str[20];
     bool down = false;
     int key = _read_key();
     if (key & 0x8000) {
@@ -17,13 +16,9 @@ size_t events_read(void *buf, size_t len) {
         down = true;
     }
     if (key != _KEY_NONE) {
-        sprintf(str, "%s %s\n", down ? "kd" : "ku", keyname[key]); // 按键事件
+        sprintf(buf, "%s %s\n", down ? "kd" : "ku", keyname[key]); // 按键事件
     } else {
-        sprintf(str, "t %d\n", _uptime()); // 时钟事件
-    }
-    if (strlen(str) <= len) {
-        strncpy((char *)buf, str, strlen(str));
-        return strlen(str);
+        sprintf(buf, "t %d\n", _uptime()); // 时钟事件
     }
     return 0;
 }
