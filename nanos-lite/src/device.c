@@ -20,7 +20,7 @@ size_t events_read(void *buf, size_t len) {
     } else {
         sprintf(buf, "t %d\n", _uptime()); // 时钟事件
     }
-    return 0;
+    return strlen(buf);
 }
 
 static char dispinfo[128] __attribute__((used));
