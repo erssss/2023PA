@@ -43,12 +43,11 @@ void fb_write(const void *buf, off_t offset, size_t len) {
     index = offset / 4;
     column = index % width;
     row = index / width;
-
     index = (offset + len) / 4;
     row2 = index / width;
 
     /* 一行 */
-    if (row2 == row) {
+    if (row2 - row == 0) {
         _draw_rect(buf, column, row, len / 4, 1); 
         // 内容，左上角起的行列，长度，行数
         return;
