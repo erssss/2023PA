@@ -113,7 +113,6 @@ int fs_close(int fd) {
 }
 
 extern void dispinfo_read(void *buf, off_t offset, size_t len);
-// 从fd文件的offset处开始，读最多len个字节到buf中，返回实际字节数
 ssize_t fs_read(int fd, void *buf, size_t len) {
     assert(fd >= 0 && fd < NR_FILES);
     if (fd < 3 || fd == FD_FB) { // 不可读取fb
@@ -124,20 +123,18 @@ ssize_t fs_read(int fd, void *buf, size_t len) {
     if (n > len) {
         n = len; // 实际读取的长度不能超过n
     }
-    if (fd == FD_EVENTS) {
-        return events_read(buf, len);
-    } else if (fd == FD_DISPINFO) {
+    if (fd == FD_DISPINFO)
         dispinfo_read(buf, fs_open_offset(fd), n);
-    } else
+    else if (fd == FD_EVENTS)
+        return events_read(buf, len);
+    else
         // 从文件当前的位置读len个字节到buf
         ramdisk_read(buf, fs_disk_offset(fd) + fs_open_offset(fd), n);
-    // 更新偏移量
-    set_open_offset(fd, fs_open_offset(fd) + n);
+    set_open_offset(fd, fs_open_offset(fd) + n); // 更新偏移
     return n;
 }
 
 extern void fb_write(const void *buf, off_t offset, size_t len);
-// buf写入文件
 ssize_t fs_write(int fd, void *buf, size_t len) {
     assert(fd >= 0 && fd < NR_FILES);
     if (fd < 3 || fd == FD_DISPINFO) { // 不可写入dispinfo
@@ -148,31 +145,30 @@ ssize_t fs_write(int fd, void *buf, size_t len) {
     if (n > len) {
         n = len; // 实际读取的长度不能超过n
     }
-    // 对于显存，用fb_write来写
     if (fd == FD_FB) {
         fb_write(buf, fs_open_offset(fd), n);
     } else
         ramdisk_write(buf, fs_disk_offset(fd) + fs_open_offset(fd), n);
-    // 更新偏移量
-    set_open_offset(fd, fs_open_offset(fd) + n);
+    set_open_offset(fd, fs_open_offset(fd) + n); // 更新【偏移
     return n;
 }
 
-// 根据whence不同，将读写偏移指针移动到某处
+// 移动读写指针
 off_t fs_lseek(int fd, off_t offset, int whence) {
     // Log("fs_lseek");
     switch (whence) {
-    case SEEK_SET: // 开始位置+offset
-        set_open_offset(fd, offset);
-        return fs_open_offset(fd);
-    case SEEK_CUR: // 当前位置+offset
+    case SEEK_CUR: // 当前位置+偏移
         set_open_offset(fd, fs_open_offset(fd) + offset);
-        return fs_open_offset(fd);
+        break;
+    case SEEK_SET: // 开始位置+偏移
+        set_open_offset(fd, offset);
+        break;
     case SEEK_END: // 末尾
         set_open_offset(fd, fs_size(fd) + offset);
-        return fs_open_offset(fd);
+        break;
     default:
         panic("Unhandled whence ID = %d", whence);
         return -1;
     }
+    return fs_open_offset(fd);
 }
