@@ -157,13 +157,13 @@ ssize_t fs_write(int fd, void *buf, size_t len) {
 off_t fs_lseek(int fd, off_t offset, int whence) {
     // Log("fs_lseek");
     switch (whence) {
-    case SEEK_CUR: // 当前位置+偏移
+    case SEEK_CUR: // 根据当前的光标，以 offset 为偏移量设置光标
         set_open_offset(fd, fs_open_offset(fd) + offset);
         break;
-    case SEEK_SET: // 开始位置+偏移
+    case SEEK_SET: // 根据当前的 offset 设置光标
         set_open_offset(fd, offset);
         break;
-    case SEEK_END: // 末尾
+    case SEEK_END: // 根据当前的光标，以 offset 为偏移量设置光标
         set_open_offset(fd, fs_size(fd) + offset);
         break;
     default:
