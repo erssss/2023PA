@@ -320,3 +320,15 @@ void operand_write(Operand *op, rtlreg_t* src) {
 make_DHelper(lidt_a) {
   decode_op_a(eip,id_dest,true);
 }
+
+// for cr reg
+make_DHelper(mov_load_cr){
+  decode_op_rm(eip,id_dest,false,id_src,false);
+  //reg为0/3，把寄存器内容读到src
+  rtl_load_cr(&id_src->val,id_src->reg);
+}
+
+make_DHelper(mov_store_cr){
+  decode_op_rm(eip,id_src,true,id_dest,false);
+}
+
