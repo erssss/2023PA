@@ -1,3 +1,4 @@
+#include "monitor/watchpoint.h"
 #include "nemu.h"
 #include "monitor/monitor.h"
 
@@ -10,9 +11,11 @@
 
 int nemu_state = NEMU_STOP;
 
+
 void exec_wrapper(bool);
 
 /* Simulate how the CPU works. */
+// 指令执行主循环
 void cpu_exec(uint64_t n) {
   if (nemu_state == NEMU_END) {
     printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
@@ -25,10 +28,17 @@ void cpu_exec(uint64_t n) {
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
+    // 每执行一条指令，就会调用一次exec_wrapper函数，其中包括取指、指令译码、指令执行三个步骤
     exec_wrapper(print_flag);
 
 #ifdef DEBUG
     /* TODO: check watchpoints here. */
+    // PA1
+
+    if(check_wp()){
+      nemu_state = NEMU_STOP;
+    }
+
 
 #endif
 
