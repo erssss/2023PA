@@ -101,8 +101,8 @@ void print_reg() {
         if (i % 2 == 1)
             printf("\n");
     }
-    printf("%-8s0x%08x%16d\t", regsb[0], reg_cr0(), reg_cr0());
-    printf("%-8s0x%08x%16d\t", regsb[1], reg_cr3(), reg_cr3());
+    printf("%-8s0x%08x%16d\t", "cr0", reg_cr0(), reg_cr0());
+    printf("%-8s0x%08x%16d\t", "cr3", reg_cr3(), reg_cr3());
     printf("\n");
 
     return;
