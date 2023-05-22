@@ -101,6 +101,10 @@ void print_reg() {
         if (i % 2 == 1)
             printf("\n");
     }
+    printf("%-8s0x%08x%16d\t", "cr0", reg_cr0(), reg_cr0());
+    printf("%-8s0x%08x%16d\t", "cr3", reg_cr3(), reg_cr3());
+    printf("\n");
+
     return;
 }
 
@@ -145,12 +149,10 @@ static int cmd_x(char *args) {
     printf("[Memory:]");
     uint8_t *addr_b = guest_to_host(addr);
     for (int i = 0; i < cnt; i++) {
-        if (i % 4 == 0){
+        if (i % 4 == 0) {
             printf("\n0x%x: %02x", addr + i, *(addr_b + i));
-        }
-        else
+        } else
             printf("  %02x", *(addr_b + i));
-
     }
     printf("\n");
 

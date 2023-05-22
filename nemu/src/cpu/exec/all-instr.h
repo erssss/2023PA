@@ -17,6 +17,7 @@ make_EHelper(cltd);
 make_EHelper(cwtl);
 make_EHelper(pusha);
 make_EHelper(popa);
+make_EHelper(mov_store_cr);
 
 //control.c
 make_EHelper(call);
