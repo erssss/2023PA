@@ -1,14 +1,15 @@
 #include "device/mmio.h"
-#include "nemu.h"
 #include "memory/mmu.h"
+#include "nemu.h"
 #define PMEM_SIZE (128 * 1024 * 1024)
 
 #define PDXSIZE 22
 #define PTXSIZE 12
-#define PTE_ADDR(pte)   ((uint32_t)(pte) & ~0xfff) // 获取地址高20位，即基址
-#define PDX(va)     (((uint32_t)(va) >> PDXSIZE) & 0x3ff) // 查找页目录，获取二级页表
-#define PTX(va)     (((uint32_t)(va) >> PTXSIZE) & 0x3ff) // 获取页
-#define OFF(va)     ((uint32_t)(va) & 0xfff) // 获取页内偏移
+#define PTE_ADDR(pte) ((uint32_t)(pte) & ~0xfff) // 获取地址高20位，即基址
+#define PDX(va)                                                                \
+    (((uint32_t)(va) >> PDXSIZE) & 0x3ff) // 查找页目录，获取二级页表
+#define PTX(va) (((uint32_t)(va) >> PTXSIZE) & 0x3ff) // 获取页
+#define OFF(va) ((uint32_t)(va)&0xfff)                // 获取页内偏移
 
 #define pmem_rw(addr, type)                                                    \
     *(type *)({                                                                \
@@ -48,50 +49,50 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 //   paddr_write(addr, len, data);
 // }
 
-//根据虚拟地址addr解析出物理地址
-// paddr_t page_translate(vaddr_t addr, bool w1r0) {
-//     //aka page_walk
-//     PDE pde, *pgdir;
-//     PTE pte, *pgtab;
-//     // 只有进入保护模式并开启分页机制后才会进行页级地址转换。。。。。。。。。。
-//     if (cpu.cr0.protect_enable && cpu.cr0.paging) {
-// 	    pgdir = (PDE *)(PTE_ADDR(cpu.cr3.val)); //cr3存放20位的基址作为页目录入口
-// 	    pde.val = paddr_read((paddr_t)&pgdir[PDX(addr)], 4);
-// 	    assert(pde.present);
-// 	    pde.accessed = 1;
+// 根据虚拟地址addr解析出物理地址
+//  paddr_t page_translate(vaddr_t addr, bool w1r0) {
+//      //aka page_walk
+//      PDE pde, *pgdir;
+//      PTE pte, *pgtab;
+//      //
+//      只有进入保护模式并开启分页机制后才会进行页级地址转换。。。。。。。。。。
+//      if (cpu.cr0.protect_enable && cpu.cr0.paging) {
+//  	    pgdir = (PDE *)(PTE_ADDR(cpu.cr3.val));
+//  //cr3存放20位的基址作为页目录入口 	    pde.val =
+//  paddr_read((paddr_t)&pgdir[PDX(addr)], 4); 	    assert(pde.present);
+//  pde.accessed = 1;
 
-// 	    pgtab = (PTE *)(PTE_ADDR(pde.val));  //页目录存放20位的基址作为页表入口
-// 	    pte.val = paddr_read((paddr_t)&pgtab[PTX(addr)], 4);
-// 	    assert(pte.present);
-// 	    pte.accessed = 1;
-// 	    pte.dirty = w1r0 ? 1 : pte.dirty; //写则置脏位
+// 	    pgtab = (PTE *)(PTE_ADDR(pde.val));
+// //页目录存放20位的基址作为页表入口 	    pte.val =
+// paddr_read((paddr_t)&pgtab[PTX(addr)], 4); 	    assert(pte.present);
+// pte.accessed = 1; 	    pte.dirty = w1r0 ? 1 : pte.dirty; //写则置脏位
 
 // 	    //pte高20位和线性地址低12位拼接成真实地址
-// 	    return PTE_ADDR(pte.val) | OFF(addr); 
+// 	    return PTE_ADDR(pte.val) | OFF(addr);
 // 	}
 
 //     return addr;
 // }
-paddr_t page_translate(vaddr_t addr, bool iswrite){
-  CR0 cr0=(CR0)cpu.CR0;//mmu.h中定义了CR0的结构
-  if(cr0.paging&&cr0.protect_enable){//如果是分页机制，保护模式
-    CR3 cr3=(CR3)cpu.CR3;
-    PDE *pgdirs=(PDE*)PTE_ADDR(cr3.val);//cr3的高20位是页目录表基址
-    PDE pde=(PDE)paddr_read((uint32_t)(pgdirs+PDX(addr)),4);//在内存中的页目录找到正确的页目录项
+paddr_t page_translate(vaddr_t addr, bool write) {
+    CR0 cr0 = (CR0)cpu.CR0;
+    // 进入保护模式并开启分页机制后才会进行页级地址转换
+    if (cr0.paging && cr0.protect_enable) {
+        CR3 cr3 = (CR3)cpu.CR3;
+        PDE *pgdirs = (PDE *)PTE_ADDR(cr3.val); // 页目录表基址
+        PDE pde = (PDE)paddr_read((uint32_t)(pgdirs + PDX(addr)),
+                                  4); // 在页目录中查找页目录项
+        PTE *ptab = (PTE *)PTE_ADDR(pde.val); // 页表基址
+        PTE pte = (PTE)paddr_read((uint32_t)(ptab + PTX(addr)),
+                                  4); // 在页表中查找页表项
+        pde.accessed = 1;
+        pte.accessed = 1;
+        if (write)
+            pte.dirty = 1;
 
-    PTE *ptab=(PTE*)PTE_ADDR(pde.val);//页目录项的高20位是页表基址
-    PTE pte=(PTE)paddr_read((uint32_t)(ptab+PTX(addr)),4);//页表项
-
-    pde.accessed=1;
-    pte.accessed=1;
-    if(iswrite){
-      pte.dirty=1;
+        paddr_t paddr = PTE_ADDR(pte.val) | OFF(addr); // 物理地址
+        return paddr;
     }
-
-    paddr_t paddr=PTE_ADDR(pte.val)|OFF(addr);//将物理页基址与页内偏移拼起来得到物理地址
-    return paddr;
-  }
-  return addr;
+    return addr;
 }
 
 // 根据虚拟地址读取len个字节的内存并返回
