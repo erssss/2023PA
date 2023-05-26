@@ -7,7 +7,7 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
   	  return do_syscall(r);
     case (_EVENT_TRAP):
       printf("Self-trapped!\n");
-      return do_syscall(r);
+      return NULL;
     default: panic("Unhandl88888ed event ID = %d", e.event);
   }
 
