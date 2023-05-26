@@ -29,10 +29,11 @@ uintptr_t loader(_Protect *as, const char *filename) {
             fs_size(fd)); // 把文件整个读入内存DEFAULT_ENTRY处
 
     /* PA4 */
+    Log("????");
     int size = fs_size(fd);
     int page_sum = (size + PGSIZE - 1) / PGSIZE; // 页面数量
-    void *va = DEFAULT_ENTRY;                    // 虚拟空间
     Log("============= size=%d,page_sum=%d ================", size, page_sum);
+    void *va = DEFAULT_ENTRY;                    // 虚拟空间
     for (int i = 0; i < page_sum; ++i) { // 根据虚拟地址读取物理页
         void *pa = NULL;
         pa = new_page();         // 申请物理页
