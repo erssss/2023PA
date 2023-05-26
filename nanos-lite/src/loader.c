@@ -25,11 +25,11 @@ uintptr_t loader(_Protect *as, const char *filename) {
     /* PA3.2 */
     int fd = fs_open(filename, 0, 0);
     Log("============= filename=%s,fd=%d ================", filename, fd);
+    Log("????");
     fs_read(fd, DEFAULT_ENTRY,
             fs_size(fd)); // 把文件整个读入内存DEFAULT_ENTRY处
 
     /* PA4 */
-    Log("????");
     int size = fs_size(fd);
     int page_sum = (size + PGSIZE - 1) / PGSIZE; // 页面数量
     Log("============= size=%d,page_sum=%d ================", size, page_sum);
