@@ -16,6 +16,7 @@ int sys_lseek(int fd, off_t offset, int whence) {
     return fs_lseek(fd, offset, whence);
 }
 
+
 // #define SYSCALL_ARG1(r) 0
 // #define SYSCALL_ARG2(r) 0
 // #define SYSCALL_ARG3(r) 0
@@ -32,6 +33,11 @@ int sys_lseek(int fd, off_t offset, int whence) {
 
 // return NULL;
 // }
+
+#define SYSCALL_ARG1(r) r->eax
+#define SYSCALL_ARG2(r) r->ebx
+#define SYSCALL_ARG3(r) r->ecx
+#define SYSCALL_ARG4(r) r->edx
 
 int sys_none() { return 1; }
 
