@@ -25,13 +25,17 @@ uintptr_t loader(_Protect *as, const char *filename) {
     /* PA3.2 */
     int fd = fs_open(filename, 0, 0);
     Log("============= filename=%s,fd=%d ================", filename, fd);
-    // fs_read(fd, DEFAULT_ENTRY, fs_size(fd)); // 把文件整个读入内存DEFAULT_ENTRY处
+    // fs_read(fd, DEFAULT_ENTRY, fs_size(fd)); 
+    // 把文件整个读入内存DEFAULT_ENTRY处
 
     /* PA4 */
     int size = fs_size(fd);
     int page_sum = (size + PGSIZE - 1) / PGSIZE; // 页面数量
+    if (size % PGSIZE != 0) {
+        page_sum++;
+    }
     Log("============= size=%d,page_sum=%d ================", size, page_sum);
-    void *va = DEFAULT_ENTRY;                    // 虚拟空间
+    void *va = DEFAULT_ENTRY;            // 虚拟空间
     for (int i = 0; i < page_sum; ++i) { // 根据虚拟地址读取物理页
         void *pa = NULL;
         pa = new_page();         // 申请物理页
