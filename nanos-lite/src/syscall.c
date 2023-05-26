@@ -7,7 +7,12 @@ extern int fs_open(const char *pathname, int flags, int mode);
 extern off_t fs_lseek(int fd, off_t offset, int whence);
 extern int fs_close(int fd);
 
-int sys_brk(int addr) { return 0; }
+// int sys_brk(int addr) { return 0; }
+
+int sys_brk(int addr){
+  extern int mm_brk(uint32_t new_brk);
+  return mm_brk(addr);
+}
 
 int sys_open(const char *filename) { return fs_open(filename, 0, 0); }
 int sys_read(int fd, void *buf, size_t len) { return fs_read(fd, buf, len); }
@@ -15,6 +20,7 @@ int sys_close(int fd) { return fs_close(fd); }
 int sys_lseek(int fd, off_t offset, int whence) {
     return fs_lseek(fd, offset, whence);
 }
+
 
 // #define SYSCALL_ARG1(r) 0
 // #define SYSCALL_ARG2(r) 0
@@ -32,6 +38,7 @@ int sys_lseek(int fd, off_t offset, int whence) {
 
 // return NULL;
 // }
+
 
 int sys_none() { return 1; }
 
