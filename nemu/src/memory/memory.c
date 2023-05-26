@@ -73,6 +73,8 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 
 //     return addr;
 // }
+
+// 虚实地址转换
 paddr_t page_translate(vaddr_t addr, bool write) {
     CR0 cr0 = (CR0)cpu.CR0;
     // 进入保护模式并开启分页机制后才会进行页级地址转换
