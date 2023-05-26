@@ -85,5 +85,22 @@ void _unmap(_Protect *p, void *va) {}
 
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry,
                 char *const argv[], char *const envp[]) {
-    return NULL;
+    // return NULL;
+    extern void *memcpy(void *, const void *, int);
+    // 设置栈帧
+    int para1 = 0;
+    char *para2 = NULL;
+    memcpy((void *)ustack.end - 16, (void *)para1, 4);
+    memcpy((void *)ustack.end - 12, (void *)para1, 4);
+    memcpy((void *)ustack.end - 8, (void *)para2, 4);
+    memcpy((void *)ustack.end - 4, (void *)para2, 4);
+    /* trapframe */
+    _RegSet tf;
+    tf.eflags = 0x02 | FL_IF; // fix: 可能有问题
+    tf.cs = 8;
+    tf.eip = (uintptr_t)entry; // 返回地址
+    void *ptf = (void *)(ustack.end - 16 - sizeof(_RegSet)); // 栈底
+    memcpy(ptf, (void *)&tf, sizeof(_RegSet)); // 把tf压栈
+
+    return (_RegSet *)ptf;
 }
