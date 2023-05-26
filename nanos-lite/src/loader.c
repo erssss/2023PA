@@ -1,6 +1,7 @@
 #include "common.h"
 
-#define DEFAULT_ENTRY ((void *)0x4000000)
+#define DEFAULT_ENTRY ((void *)0x8048000)
+// #define DEFAULT_ENTRY ((void *)0x4000000)
 // #define RAMDISK_SIZE ((&ramdisk_end)-(&ramdisk_start))
 // extern uint8_t ramdisk_start,ramdisk_end;
 extern void ramdisk_read(void *buf, off_t offset, size_t len);
@@ -21,7 +22,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
 
   /* PA3.2 */
   int fd=fs_open(filename,0,0);
-  Log("=============filename=%s,fd=%d",filename,fd);
+  Log("=============filename=%s,fd=%d ================",filename,fd);
   fs_read(fd,DEFAULT_ENTRY,fs_size(fd));//把文件整个读入内存DEFAULT_ENTRY处
   fs_close(fd);
 
