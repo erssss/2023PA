@@ -26,31 +26,33 @@ void load_prog(const char *filename) {
     pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
 
-// _RegSet *schedule(_RegSet *prev) {
-//     if (current != NULL) {  // 如果当前进程的PCB指针不为空
-//         current->tf = prev; // 保存tf
-//     }
-//     current = &pcb[0];     // 切换到第一个用户进程
-//     _switch(&current->as); // 切换虚拟地址空间
-//     return current->tf;
-// }
-
-#define FREQUENCY 1000
-static int count = 0;
 _RegSet *schedule(_RegSet *prev) {
-  printf("schedule");
-    if (current != NULL)    // 如果当前进程的PCB指针不为空
+    if (current != NULL) {  // 如果当前进程的PCB指针不为空
         current->tf = prev; // 保存tf
-    else
-        current = &pcb[cur_proc];
-    if (current == &pcb[cur_proc]) // 计时
-        count++;
-    else
-        current = &pcb[cur_proc]; // 切换进程
-    if (count >= FREQUENCY) {     // 超时
-        current = &pcb[1];
-        count = 0;
     }
+    // 切换进程
+    current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
+    // current = &pcb[0];     // 切换到第一个用户进程
     _switch(&current->as); // 切换虚拟地址空间
     return current->tf;
 }
+
+// #define FREQUENCY 1000
+// _RegSet *schedule(_RegSet *prev) {
+//   printf("schedule");
+//     if (current != NULL)    // 如果当前进程的PCB指针不为空
+//         current->tf = prev; // 保存tf
+//     else
+//         current = &pcb[cur_proc];
+//     static int count = 0;
+//     if (current == &pcb[cur_proc]) // 计时
+//         count++;
+//     else
+//         current = &pcb[cur_proc]; // 切换进程
+//     if (count >= FREQUENCY) {     // 超时
+//         current = &pcb[1];
+//         count = 0;
+//     }
+//     _switch(&current->as); // 切换虚拟地址空间
+//     return current->tf;
+// }
