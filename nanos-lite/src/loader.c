@@ -31,9 +31,9 @@ uintptr_t loader(_Protect *as, const char *filename) {
     /* PA4 */
     int size = fs_size(fd);
     int page_sum = (size + PGSIZE - 1) / PGSIZE; // 页面数量
-    if (size % PGSIZE != 0) {
-        page_sum++;
-    }
+    // if (size % PGSIZE != 0) {
+    //     page_sum++;
+    // }
     Log("============= size=%d,page_sum=%d ================", size, page_sum);
     void *va = DEFAULT_ENTRY;            // 虚拟空间
     for (int i = 0; i < page_sum; ++i) { // 根据虚拟地址读取物理页
