@@ -5,7 +5,7 @@
 static PCB pcb[MAX_NR_PROC];
 static int nr_proc = 0;
 PCB *current = NULL;
-int cur_proc = 0;
+int current_game = 0;
 
 uintptr_t loader(_Protect *as, const char *filename);
 
@@ -43,12 +43,12 @@ _RegSet *schedule(_RegSet *prev) {
     if (current != NULL)    // 如果当前进程的PCB指针不为空
         current->tf = prev; // 保存tf
     else
-        current = &pcb[cur_proc];
+        current = &pcb[current_game];
     static int count = 0;
-    if (current == &pcb[cur_proc]) // 计时
+    if (current == &pcb[current_game]) // 计时
         count++;
     else
-        current = &pcb[cur_proc]; // 切换进程
+        current = &pcb[current_game]; // 切换进程
     if (count >= FREQUENCY) {     // 超时
         current = &pcb[1];
         count = 0;
@@ -58,6 +58,6 @@ _RegSet *schedule(_RegSet *prev) {
 }
 
 void change_proc() {
-  cur_proc = 2-cur_proc;
-  Log("cur_proc = %d",cur_proc);
+  current_game = 2-current_game;
+  Log("current_game = %d",current_game);
 }
