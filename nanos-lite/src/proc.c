@@ -56,3 +56,8 @@ _RegSet *schedule(_RegSet *prev) {
     _switch(&current->as); // 切换虚拟地址空间
     return current->tf;
 }
+
+void change_proc() {
+  cur_proc = 2-cur_proc;
+  Log("cur_proc = %d",cur_proc);
+}

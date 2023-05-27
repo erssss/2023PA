@@ -19,6 +19,9 @@ _RegSet *irq_handle(_RegSet *tf) {
         case 0x81:
             ev.event = _EVENT_TRAP;
             break;
+        case 32:
+            ev.event = _EVENT_IRQ_TIME;
+            break;
         default:
             ev.event = _EVENT_ERROR;
             break;
