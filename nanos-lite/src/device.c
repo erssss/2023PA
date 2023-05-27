@@ -8,6 +8,7 @@ static const char *keyname[256]
 unsigned long _uptime(); // 返回系统启动后经过的毫秒数
 extern int _read_key(); // 获得按键的键盘码，无按键则返回_KEY_NONE
 
+extern void change_proc();
 // 把事件写入buf中，最长len字节
 size_t events_read(void *buf, size_t len) {
     bool down = false;
@@ -16,6 +17,10 @@ size_t events_read(void *buf, size_t len) {
     if (key & 0x8000) {
         key ^= 0x8000;
         down = true;
+    }
+    if (down && key == _KEY_F12) { // PA4.3
+        change_proc();
+        Log("_KEY_F12 DOWN: change_proc!");
     }
     if (key != _KEY_NONE) {
         sprintf(buf, "%s %s\n", down ? "kd" : "ku", keyname[key]);
@@ -48,7 +53,7 @@ void fb_write(const void *buf, off_t offset, size_t len) {
 
     /* 一行 */
     if (row2 - row == 0) {
-        _draw_rect(buf, column, row, len / 4, 1); 
+        _draw_rect(buf, column, row, len / 4, 1);
         // 内容，左上角起的行列，长度，行数
         return;
     }
