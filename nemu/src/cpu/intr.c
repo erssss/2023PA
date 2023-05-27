@@ -10,6 +10,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
     memcpy(&t1, &cpu.eflags, sizeof(cpu.eflags));
     rtl_li(&t0, t1);
     rtl_push(&t0);
+    cpu.eflags.IF = 0; // PA4.3
     rtl_push(&cpu.cs);
     rtl_li(&t0, ret_addr);
     rtl_push(&t0);
@@ -26,4 +27,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
     decoding.is_jmp = true;
 }
 
-void dev_raise_intr() {}
+// INTR 引脚设置为高电平
+void dev_raise_intr() {
+    cpu.INTR = true;
+}
