@@ -59,6 +59,8 @@ make_EHelper(sar);
 make_EHelper(setcc);
 make_EHelper(test);
 make_EHelper(rol);
+make_EHelper(shld); 
+make_EHelper(shrd);
 
 
 //system.c

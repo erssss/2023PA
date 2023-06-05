@@ -119,6 +119,13 @@ static inline make_DopHelper(O) {
 make_DHelper(G2E) {
   decode_op_rm(eip, id_dest, true, id_src, true);
 }
+/* Ev <- GvIb
+ * use for shld/shrd */
+make_DHelper(Ib_G2E) {
+  decode_op_rm(eip, id_dest, true, id_src2, true);
+  id_src->width = 1;
+  decode_op_I(eip, id_src, true);
+}
 
 make_DHelper(mov_G2E) {
   decode_op_rm(eip, id_dest, false, id_src, true);
@@ -249,13 +256,7 @@ make_DHelper(gp2_Ib2E) {
   decode_op_I(eip, id_src, true);
 }
 
-/* Ev <- GvIb
- * use for shld/shrd */
-make_DHelper(Ib_G2E) {
-  decode_op_rm(eip, id_dest, true, id_src2, true);
-  id_src->width = 1;
-  decode_op_I(eip, id_src, true);
-}
+
 
 make_DHelper(O2a) {
   decode_op_O(eip, id_src, true);
