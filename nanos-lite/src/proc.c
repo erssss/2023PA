@@ -37,7 +37,7 @@ void load_prog(const char *filename) {
 //     return current->tf;
 // }
 
-#define FREQUENCY 1000
+#define FREQUENCY 100000
 _RegSet *schedule(_RegSet *prev) {
     // printf("schedule");
     if (current != NULL)    // 如果当前进程的PCB指针不为空
